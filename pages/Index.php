@@ -79,6 +79,7 @@ class Index implements PublicSection {
                 $bet->userid = TwitterAuth::getUserId();
                 $bet->teamid = $voteTeamid;
                 $bet->username = TwitterAuth::getUserName();
+                $bet->avatar = $_SESSION['twitter-avatar'];
                 $bet->save();
             }
 
