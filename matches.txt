@@ -1,0 +1,87 @@
+--Semana 1--
+Badajoz Electabuzz VS Memories of Lucario
+Charmanders Riojanos VS Terrassa's Pranksters
+Pokeyonkis VS Vancouver Venusaurs
+Articunos del Henares VS Slovakia Slakings
+Mudkip de Madrid VS W007ER
+Fail's Power VS Jolteon Rivas
+
+--Semana 2--
+Badajoz Electabuzz VS Articunos del Henares
+Charmanders Riojanos VS Pokeyonkis
+Mudkip de Madrid VS Jolteon Rivas
+Fail's Power VS Vancouver Venusaurs
+W007ER VS Terrassa's Pranksters
+Slovakia Slakings VS Memories of Lucario
+
+--Jornada 3--
+Badajoz Electabuzz VS Pokeyonkis
+Charmanders Riojanos VS Memories of Lucario
+Articunos del Henares VS Terrassa's Pranksters
+Mudkip de Madrid VS Fail's Power
+Jolteon Rivas VS W007ER
+Slovakia Slakings VS Vancouver Venusaurs
+
+--Semana 4--
+Badajoz Electabuzz VS Fail's Power
+Charmanders Riojanos VS Mudkip de Madrid
+Pokeyonkis VS Articunos del Henares
+Jolteon Rivas VS Vancouver Venusaurs
+W007ER VS Memories of Lucario
+Slovakia Slakings VS Terrassa's Pranksters
+
+--Jornada 5--
+Badajoz Electabuzz VS Jolteon Rivas
+Charmanders Riojanos VS Articunos del Henares
+Pokeyonkis VS Mudkip de Madrid
+Fail's Power VS Memories of Lucario
+W007ER VS Slovakia Slakings
+Vancouver Venusaurs VS Terrassa's Pranksters
+
+--Semana 6--
+Badajoz Electabuzz VS W007ER 
+Charmanders Riojanos VS Vancouver Venusaurs
+Terrassa's Pranksters VS Memories of Lucario
+Jolteon Rivas VS Slovakia Slakings 
+Fail's Power VS Pokeyonkis
+Articunos del Henares VS Mudkip de Madrid
+
+--Jornada 7--
+Badajoz Electabuzz VS Slovakia Slakings
+Charmanders Riojanos VS Jolteon Rivas
+Pokeyonkis VS Memories of Lucario
+Articunos del Henares VS W007ER
+Mudkip de Madrid VS Vancouver Venusaurs
+Fail's Power VS Terrassa's Pranksters
+
+--Semana 8--
+Badajoz Electabuzz VS Vancouver Venusaurs
+Fail's Power VS W007ER
+Jolteon Rivas VS Articunos del Henares
+Charmanders Riojanos VS Slovakia Slakings
+Terrassa's Pranksters VS Pokeyonkis
+Memories of Lucario VS Mudkip de Madrid
+
+--Jornada 9--
+Badajoz Electabuzz VS Terrassa's Pranksters
+Charmanders Riojanos VS Fail's Power
+Pokeyonkis VS W007ER
+Articunos del Henares VS Vancouver Venusaurs
+Mudkip de Madrid VS Slovakia Slakings
+Memories of Lucario VS Jolteon Rivas
+
+--Jornada 10--
+Badajoz Electabuzz VS Charmanders Riojanos
+Pokeyonkis VS Jolteon Rivas
+Articunos del Henares VS Memories of Lucario
+Mudkip de Madrid VS Terrassa's Pranksters
+Fail's Power VS Slovakia Slakings
+W007ER VS Vancouver Venusaurs
+
+--Jornada 11--
+Badajoz Electabuzz VS Mudkip de Madrid
+Charmanders Riojanos VS W007ER
+Pokeyonkis VS Slovakia Slakings
+Articunos del Henares VS Fail's Power
+Jolteon Rivas VS Terrassa's Pranksters
+Vancouver Venusaurs VS Memories of Lucario
