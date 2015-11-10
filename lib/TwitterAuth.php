@@ -37,11 +37,51 @@ class TwitterAuth
                 $_SESSION['twitter-username'] = $access_token['screen_name'];
                 $_SESSION['oauth_token'] = $access_token['oauth_token'];
                 $_SESSION['oauth_token_secret'] = $access_token['oauth_token_secret'];
+
+                self::afterLogin();
+
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static function afterLogin()
+    {
+        $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+
+        // Seamos francos. Necesitamos los avatares.
+        // Así que aprovechamos el login para coger el avatar del usuario
+        // y de los usuarios para los que no tengamos avatares.
+
+        $userids = Model::pluck(Bet::find('avatar = "" group by userid limit 100'), 'userid');
+
+        if (count($userids) && preg_match("'^[0-9,]+$'", $userids)) {
+            $json = $connection->get('users/lookup', ['user_id' => implode(',', $userids)]);
+
+            $newavatars = [];
+
+            foreach ($json as $userdata) {
+                $newavatars[$userdata->id_str] = $userdata->profile_image_url;
+            }
+
+            /**
+             * @var $bets Bet[]
+             */
+            $bets = Bet::find('userid in (' . implode(',', $userids) . ')');
+
+            foreach ($bets as $index => $bet) {
+                $userid = $bet->userid;
+                $bet->avatar = $newavatars[$userid] ? $newavatars[$userid] : 'about:blank';
+            }
+
+            Model::saveAll($bets);
+        }
+
+        $json = $connection->get('users/show', ['user_id' => $_SESSION['twitter-userid']]);
+        $_SESSION['twitter-avatar'] = isset($json->profile_image_url) ? $json->profile_image_url : '';
+
     }
 
     public static function forceLogin() {

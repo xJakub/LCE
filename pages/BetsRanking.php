@@ -48,6 +48,7 @@ class BetsRanking implements PublicSection
         $correctBets = [];
 
         $usernames = [];
+        $avatars = [];
 
         foreach(Bet::find('1=1') as $bet) {
             if (isset($matchWinner[$bet->matchid])) {
@@ -58,6 +59,9 @@ class BetsRanking implements PublicSection
             }
             if ($bet->username) {
                 $usernames[$bet->userid] = $bet->username;
+            }
+            if ($bet->avatar) {
+                $avatars[$bet->userid] = $bet->avatar;
             }
         }
 
@@ -83,11 +87,18 @@ class BetsRanking implements PublicSection
                 ?>
                 <tr>
                     <td><?= $pos+1 ?>º</td>
-                    <td>
-                        <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">
-                            <?= htmlentities($usernames[$userid]) ?>
-                            <? if (!isset($usernames[$userid])) echo "<i>$userid</i>"; ?>
-                        </a>
+                    <td style="text-align: left">
+                        <div class="inblock" style="vertical-align: middle">
+                            <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">
+                                <img src="<?= htmlentities($avatars[$userid]) ?>" style="width:40px; height:40px; border-radius: 20px">
+                            </a>
+                        </div>
+                        <div class="inblock" style="vertical-align: middle">
+                            <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">
+                                <?= htmlentities($usernames[$userid]) ?>
+                                <? if (!isset($usernames[$userid])) echo "<i>$userid</i>"; ?>
+                            </a>
+                        </div>
                     </td>
                     <td><?= $correctBets[$userid] ?></td>
                     <td><?= $totalBets[$userid]-$correctBets[$userid] ?></td>
