@@ -46,8 +46,12 @@ class Match extends Model
         else return $bet->teamid;
     }
 
+    static function getPublishDateForWeek($week) {
+        return mktime(17, 00, 00, 11, 1 + 7 * ($week-1), 2015);
+    }
+
     function getPublishDate() {
-        return mktime(17, 00, 00, 11, 1 + 7 * ($this->week-1), 2015);
+        return self::getPublishDateForWeek($this->week);
     }
 
     function isPublished() {

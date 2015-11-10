@@ -8,8 +8,20 @@
  */
 class Index implements PublicSection {
 
-    public $week = 3;
-    public $canVote = true;
+    // public $week = 3;
+    // public $canVote = true;
+
+    public function __construct() {
+
+        $this->week = 1;
+        $time = time();
+
+        while($time >= Match::getPublishDateForWeek($this->week)) {
+            $this->week++;
+        }
+
+        $this->canVote = (Match::getPublishDateForWeek($this->week) - $time > 3600);
+    }
 
     public function setDesign(PublicDesign $response)
     {

@@ -163,6 +163,7 @@ class Team_Index implements PublicSection
 
             $newLink = HTMLResponse::fromPOST('link', '');
 
+            // regex por http://lasnv.net/foro/839/Javascript_parsear_URL_de_YouTube
             $regex = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
 
             if (strlen($newLink) == 0 || preg_match($regex, $newLink)) {
