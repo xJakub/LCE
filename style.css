@@ -244,3 +244,29 @@ h2 {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.success-icon {
+    width: 20px;
+    height: 20px;
+    background: green;
+    border-radius: 10px;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+    display: inline-block;
+}
+.fail-icon {
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 10px;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+.grayscale {
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+}

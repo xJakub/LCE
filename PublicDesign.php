@@ -75,7 +75,7 @@ class PublicDesign extends HTMLResponse
 
                     ?></div>
                 <? if (TwitterAuth::isLogged()) { ?>
-                    Estás como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="/logout/">Cerrar <sesión>    </sesión></a><br>
+                    Estás como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="/logout/">Cerrar sesión</a><br>
                 <? } ?>
 
                 <div class="title">
