@@ -78,7 +78,7 @@ class BetsRanking implements PublicSection
 
         if (TwitterAuth::isLogged()) {
             $userid = TwitterAuth::getUserId();
-            $userBets = Bet::find('userid = ? order by matchid asc', [$userid]);
+            $userBets = Bet::find('userid = ? order by matchid desc', [$userid]);
 
             $userpos = array_search($userid, array_keys($tiebreakers));
             $userpos = ($userpos === FALSE) ? 0 : $userpos+1;
@@ -130,6 +130,7 @@ class BetsRanking implements PublicSection
                          * @var $match Match
                          */
                         $match = $matches[$bet->matchid];
+                        if (!$match->isPublished()) continue;
 
                         $team1 = $teams[$match->team1id];
                         $team2 = $teams[$match->team2id];

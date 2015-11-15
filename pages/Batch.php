@@ -30,13 +30,7 @@ class Batch implements PublicSection
         // TODO: Implement getSubtitle() method.
     }
 
-    /**
-     * @return void
-     */
-    public function show()
-    {
-        ?><pre><?
-
+    public function makeTeams() {
         if (Team::find('1=1') === array()) {
 
             $teams = [];
@@ -55,7 +49,9 @@ class Batch implements PublicSection
 
             Model::saveAll($teams);
         }
+    }
 
+    public function makeMatches() {
         if (Match::find('1=1') === array()) {
 
             $teams = Team::find('1=1');
@@ -94,5 +90,18 @@ class Batch implements PublicSection
 
             Model::saveAll($matches);
         }
+    }
+
+    public function makeImages() {
+
+    }
+
+    /**
+     * @return void
+     */
+    public function show()
+    {
+        $this->makeTeams();
+        $this->makeMatches();
     }
 }
