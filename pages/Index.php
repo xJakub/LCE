@@ -92,100 +92,81 @@ class Index implements PublicSection {
             $votes = $match->getVotes();
             $votesCount = array_sum($votes);
 
-            $team1per = 50;
-            $team2per = 50;
             $team1votes = 0;
             $team2votes = 0;
             if ($votesCount != 0) {
                 $team1votes = $votes[$team1->teamid]*1;
                 $team2votes = $votes[$team2->teamid]*1;
-                $team1per = round($team1votes / $votesCount * 100);
-                $team2per = round($team2votes / $votesCount * 100);
             }
 
             ?>
 
             <div class="matchbox">
-                <div class="teambox">
-                    <div class="votecount"><?=$team1votes?> votos (<?=$team1per?>%)</div>
-                    <? if ($canVote) { ?>
-                        <? if (TwitterAuth::isLogged()) { ?>
-                            <? if (!$match->hasVoted()) { ?>
+                <? $this->showTeamBox($match, $team1, $team1votes, $votesCount) ?>
+                <div class="vsbox">
+                    VS
+                </div>
+                <? $this->showTeamBox($match, $team2, $team2votes, $votesCount) ?>
+            </div>
+            <?
+        }
+    }
+
+    /**
+     * @param $match Match
+     * @param $team1 Team
+     * @param $team1votes
+     * @param $votesCount
+     */
+    private function showTeamBox($match, $team1, $team1votes, $votesCount)
+    {
+        $canVote = $this->canVote;
+
+        $team1per = 50;
+        if ($votesCount != 0) {
+            $team1per = round($team1votes / $votesCount * 100);
+        }
+
+        $team2 = ($match->team1id == $team1->teamid) ? $match->getTeam2() : $match->getTeam1();
+
+        ?>
+        <div class="teambox">
+            <div class="votecount"><?=$team1votes?> votos (<?=$team1per?>%)</div>
+            <? if ($canVote) { ?>
+                <? if (TwitterAuth::isLogged()) { ?>
+                    <? if (!$match->hasVoted()) { ?>
 
                         <form method="post" action="<?=HTMLResponse::getRoute()?>">
                             <button type="submit" class="vote">Votar</button>
                             <input type="hidden" name="teamid" value="<?=$team1->teamid?>">
                             <input type="hidden" name="matchid" value="<?=$match->matchid?>">
                         </form>
-                            <? } else if ($match->hasVoted() == $team1->teamid) { ?>
-                                <form method="post" action="<?=HTMLResponse::getRoute()?>">
-                                    <div class="login">
-                                        <button type="submit">Quitar voto</button>
-                                        <a target="_blank" class="twitter-share-button"
-                                           href="https://twitter.com/intent/tweet?text=<?=urlencode("¡He votado que #".$team1->getHashtag()." ganará a #".$team2->getHashtag()." en la @LCE_Pokemon! http://lce.wz.tl")?>">
-                                            ¡Twittear!</a>
-                                    </div>
-                                    <input type="hidden" name="unteamid" value="<?=$team1->teamid?>">
-                                    <input type="hidden" name="unmatchid" value="<?=$match->matchid?>">
-                                </form>
-                            <? } ?>
-                        <? } else { ?>
-                            <a href="/authenticate/" class="login">&iexcl;Usa Twitter para votar!</a>
-                        <? } ?>
-                    <? } else { ?>
-                        <? if (TwitterAuth::isLogged()) { ?>
-                            <? if ($match->hasVoted() == $team1->teamid) { ?>
-                                <span class="login">Has votado por este equipo</span>
-                            <? } ?>
-                        <? } else { ?>
-                            <a href="/authenticate/" class="login">&iexcl;Entra para ver tus votos!</a>
-                        <? } ?>
+                    <? } else if ($match->hasVoted() == $team1->teamid) { ?>
+                        <form method="post" action="<?=HTMLResponse::getRoute()?>">
+                            <div class="login">
+                                <button type="submit">Quitar voto</button>
+                                <a target="_blank" class="twitter-share-button"
+                                   href="https://twitter.com/intent/tweet?text=<?=urlencode("¡He votado que #".$team1->getHashtag()." ganará a #".$team2->getHashtag()." en la @LCE_Pokemon! http://lce.wz.tl")?>">
+                                    ¡Twittear!</a>
+                            </div>
+                            <input type="hidden" name="unteamid" value="<?=$team1->teamid?>">
+                            <input type="hidden" name="unmatchid" value="<?=$match->matchid?>">
+                        </form>
                     <? } ?>
-                    <a href="/equipos/<?=$team1->getLink()?>/"><img src="/<?=$team1->getImageLink(200, 150)?>"></a>
-                </div>
-                <div class="vsbox">
-                    VS
-                </div>
-                <div class="teambox">
-                    <div class="votecount"><?=$team2votes?> votos (<?=$team2per?>%)</div>
-
-                    <? if ($canVote) { ?>
-                        <? if (TwitterAuth::isLogged()) { ?>
-                            <? if (!$match->hasVoted()) { ?>
-
-                                <form method="post" action="<?=HTMLResponse::getRoute()?>">
-                                    <button type="submit" class="vote">Votar</button>
-                                    <input type="hidden" name="teamid" value="<?=$team2->teamid?>">
-                                    <input type="hidden" name="matchid" value="<?=$match->matchid?>">
-                                </form>
-                            <? } else if ($match->hasVoted() == $team2->teamid) { ?>
-                                <form method="post" action="<?=HTMLResponse::getRoute()?>">
-                                    <div class="login">
-                                        <button type="submit">Quitar voto</button>
-                                        <a target="_blank" class="twitter-share-button"
-                                           href="https://twitter.com/intent/tweet?text=<?=urlencode("¡He votado que #".$team2->getHashtag()." ganará a #".$team1->getHashtag()." en la @LCE_Pokemon! http://lce.wz.tl")?>">
-                                            ¡Twittear!</a>
-                                    </div>
-                                    <input type="hidden" name="unteamid" value="<?=$team2->teamid?>">
-                                    <input type="hidden" name="unmatchid" value="<?=$match->matchid?>">
-                                </form>
-                            <? } ?>
-                        <? } else { ?>
-                            <a href="/authenticate/" class="login">&iexcl;Usa Twitter para votar!</a>
-                        <? } ?>
-                    <? } else { ?>
-                        <? if (TwitterAuth::isLogged()) { ?>
-                            <? if ($match->hasVoted() == $team2->teamid) { ?>
-                                <span class="login">Has votado por este equipo</span>
-                            <? } ?>
-                        <? } else { ?>
-                            <a href="/authenticate/" class="login">&iexcl;Entra para ver tus votos!</a>
-                        <? } ?>
+                <? } else { ?>
+                    <a href="/authenticate/" class="login">&iexcl;Usa Twitter para votar!</a>
+                <? } ?>
+            <? } else { ?>
+                <? if (TwitterAuth::isLogged()) { ?>
+                    <? if ($match->hasVoted() == $team1->teamid) { ?>
+                        <span class="login">Has votado por este equipo</span>
                     <? } ?>
-                    <a href="/equipos/<?=$team2->getLink()?>/"><img src="/<?=$team2->getImageLink(200, 150)?>"></a>
-                </div>
-            </div>
-            <?
-        }
+                <? } else { ?>
+                    <a href="/authenticate/" class="login">&iexcl;Entra para ver tus votos!</a>
+                <? } ?>
+            <? } ?>
+            <a href="/equipos/<?=$team1->getLink()?>/"><img src="/<?=$team1->getImageLink(200, 150)?>"></a>
+        </div>
+        <?
     }
 }
