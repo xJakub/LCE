@@ -23,7 +23,14 @@ class PublicDesign extends HTMLResponse
         $this->setTitle($section->getTitle() . ' - ' . $section->getSubtitle());
 
         $this->addStyleSheet('/style.css');
-        $this->addStyleSheet('http://fonts.googleapis.com/css?family=Open+Sans:400,700,600');
+
+        if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == '::1') {
+            $this->addJavaScript("http://localhost/jquery.js", true);
+        }
+        else {
+            $this->addJavaScript("https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", true);
+        }
+
         $this->addJavaScript("
             $(document).ready(function() {
                 if(screen.width <= 512) {
@@ -31,13 +38,6 @@ class PublicDesign extends HTMLResponse
                 }
             })
         ", false);
-
-        if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == '::1') {
-            $this->addJavaScript("http://localhost/jquery.js", true, true);
-        }
-        else {
-            $this->addJavaScript("https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", true, true);
-        }
 
         $section->setDesign($this);
         $this->section = $section;

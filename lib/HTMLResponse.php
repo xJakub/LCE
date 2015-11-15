@@ -97,8 +97,11 @@ class HTMLResponse {
         return $this->title;
     }
 
-    public function addStyleSheet($link) {
-        $this->stylesheets[] = $link;
+    public function addStyleSheet($data, $isURL=true, $toHead=true) {
+        $arr = func_get_args();
+        if (count($arr) < 2) $arr[] = true;
+        if (count($arr) < 3) $arr[] = true;
+        $this->stylesheets[] = $arr;
     }
 
     public function setMeta($key, $value) {
@@ -117,9 +120,37 @@ class HTMLResponse {
             }
         }
     }
-    public function showStyleSheets() {
-        foreach($this->stylesheets as $link) {
-            ?><link href='<?=$link?>' rel='stylesheet' type='text/css'><?
+    public function showStyleSheets($isHead) {
+        foreach($this->stylesheets as $arr) {
+            list($data, $isURL, $toHead) = $arr;
+            if ($toHead == $isHead) {
+                if ($isHead) {
+                    if ($isURL) {
+                        ?>
+                        <link href='<?= htmlentities($data) ?>' rel='stylesheet' type='text/css'><?
+                    } else {
+                        ?>
+                        <style type="text/css"><?= $data ?></style><?
+                    }
+                } else {
+                    if ($isURL) {
+                        ?><script>
+                            var cb = function() {
+                                var l = document.createElement('link'); l.rel = 'stylesheet';
+                                l.href = "<?= htmlentities($data) ?>";
+                                var h = document.getElementsByTagName('head')[0]; h.parentNode.insertBefore(l, h);
+                            };
+                            var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                                webkitRequestAnimationFrame || msRequestAnimationFrame;
+                            if (raf) raf(cb);
+                            else window.addEventListener('load', cb);
+                        </script><?
+                    } else {
+                        ?>
+                        <style type="text/css"><?= $data ?></style><?
+                    }
+                }
+            }
         }
     }
 
@@ -139,11 +170,12 @@ class HTMLResponse {
                 <?=$this->showMetas()?>
                 <title><?= htmlentities($this->title) ?></title>
                 <?=$this->showJavaScript(true)?>
-                <?=$this->showStyleSheets()?>
+                <?=$this->showStyleSheets(true)?>
             </head>
             <body>
                 <?=$this->showBody() ?>
                 <?=$this->showJavaScript(false)?>
+                <?=$this->showStyleSheets(false)?>
             </body>
         </html>
         <?php

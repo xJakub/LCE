@@ -9,6 +9,11 @@
 class Team_Index implements PublicSection
 {
 
+    /**
+     * @var $design PublicDesign
+     */
+    private $design;
+
     public function __construct($dir) {
         $this->team = Team::fromLink($dir);
         if (!$this->team) HTMLResponse::exitWithRoute('/equipos/');
@@ -16,7 +21,7 @@ class Team_Index implements PublicSection
 
     public function setDesign(PublicDesign $response)
     {
-        // TODO: Implement setDesign() method.
+        $this->design = $response;
     }
 
     /**
@@ -181,9 +186,9 @@ class Team_Index implements PublicSection
                 $video->save();
             }
             else {
-                ?>
-                <script>$(function() { alert("El enlace que has puesto no es un enlace de YouTube válido"); })</script>
-                <?
+                $this->design->addJavaScript("
+                    $(function() { alert(\"El enlace que has puesto no es un enlace de YouTube válido\"); })
+                ", false);
             }
         }
 
@@ -193,7 +198,7 @@ class Team_Index implements PublicSection
         if (!$video && $isManager) {
             ?>
             <div style="white-space: nowrap">
-                <span class="inblock" style="text-decoration: line-through; color: #666" class="editableVideo"><?= $label ?></span>
+                <span class="inblock editableVideo" style="text-decoration: line-through; color: #666"><?= $label ?></span>
                 <form class="editVideo inblock" method="POST" action="<?= HTMLResponse::getRoute() ?>">
                     <span class="editableVideo">Editar</span>
                     <input type="hidden" name="link" class="editInput" value="">
