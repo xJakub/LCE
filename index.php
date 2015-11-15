@@ -34,9 +34,8 @@ $rNumExtra = "{$rNum}{$rExtra}";
 
 
 $router->addRoute("/", array('Index'));
+$router->addRoute("/jornadas/{$rNum}/", array('Index'));
 $router->addRoute("/batch/", array('Batch'));
-$router->addRoute("/authenticate/", array('Authenticate'));
-$router->addRoute("/logout/", array('Logout'));
 $router->addRoute("/equipos/", array('Teams'));
 $router->addRoute("/equipos/{$rDir}/", array('Team_Index'));
 $router->addRoute("/clasificacion/", array('Ranking'));

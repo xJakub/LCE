@@ -15,10 +15,10 @@ class TwitterAuth
         return isset($_SESSION['twitter-userid']) && $_SESSION['twitter-userid'];
     }
 
-    public static function getAuthorizeURL()
+    public static function getAuthorizeURL($route = "/")
     {
         $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
-            $response = $connection->oauth("oauth/request_token", array("oauth_callback" => "http://".$_SERVER['SERVER_NAME']."/"));
+            $response = $connection->oauth("oauth/request_token", array("oauth_callback" => "http://".$_SERVER['SERVER_NAME'].$route));
         $_SESSION['oauth_token'] = $response['oauth_token'];
         $_SESSION['oauth_token_secret'] = $response['oauth_token_secret'];
         $url = $connection->url("oauth/authorize", array("oauth_token" => $response['oauth_token']));

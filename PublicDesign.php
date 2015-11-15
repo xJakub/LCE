@@ -16,6 +16,17 @@ class PublicDesign extends HTMLResponse
     {
         parent::__construct();
 
+        if (HTMLResponse::fromGET('authenticate')) {
+            HTMLResponse::exitWithRoute(TwitterAuth::getAuthorizeURL(HTMLResponse::getRoute()));
+        }
+
+        if (HTMLResponse::fromGET('logout')) {
+            session_destroy();
+            HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
+        }
+
+
+
         $this->topMenu = array();
 
         $this->setMeta('charset', 'utf-8');
@@ -75,7 +86,7 @@ class PublicDesign extends HTMLResponse
 
                     ?></div>
                 <? if (TwitterAuth::isLogged()) { ?>
-                    Estás como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="/logout/">Cerrar sesión</a><br>
+                    Estás como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
                 <? } ?>
 
                 <div class="title">
