@@ -200,7 +200,7 @@ class Team_Index implements PublicSection
         if (!$video && $isManager) {
             ?>
             <div style="white-space: nowrap">
-                <span class="inblock editableVideo" style="text-decoration: line-through; color: #666"><?= $label ?></span>
+                <span class="inblock" style="text-decoration: line-through; color: #666"><?= $label ?></span>
                 <form class="editVideo inblock" method="POST" action="<?= HTMLResponse::getRoute() ?>">
                     <span class="editableVideo">Editar</span>
                     <input type="hidden" name="link" class="editInput" value="">
