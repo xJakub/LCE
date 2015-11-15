@@ -49,10 +49,10 @@ class Team_Index implements PublicSection
         $resultNames = [
             ['Sin resultado', 'Sin resultado'],
         ];
-        for ($i=6; $i>=1; $i--) {
+        for ($i=6; $i>=0; $i--) {
             $resultNames[] = ["Victoria $i-0", "Derrota 0-$i"];
         }
-        for ($i=1; $i<=6; $i++) {
+        for ($i=0; $i<=6; $i++) {
             $resultNames[] = ["Derrota 0-$i", "Victoria $i-0"];
         }
 

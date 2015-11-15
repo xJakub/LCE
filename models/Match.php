@@ -59,10 +59,10 @@ class Match extends Model
     }
 
     function getWinner() {
-        if ($this->result >= 1 && $this->result <= 6) {
+        if ($this->result >= 1 && $this->result <= 7) {
             return $this->team1id;
         }
-        elseif ($this->result >= 7 && $this->result <= 12) {
+        elseif ($this->result >= 8 && $this->result <= 14) {
             return $this->team2id;
         }
         else {
@@ -71,10 +71,10 @@ class Match extends Model
     }
 
     function getLooser() {
-        if ($this->result >= 1 && $this->result <= 6) {
+        if ($this->result >= 1 && $this->result <= 7) {
             return $this->team2id;
         }
-        elseif ($this->result >= 7 && $this->result <= 12) {
+        elseif ($this->result >= 8 && $this->result <= 14) {
             return $this->team1id;
         }
         else {
@@ -83,11 +83,11 @@ class Match extends Model
     }
 
     function getLooserKills() {
-        if ($this->result >= 1 && $this->result <= 6) {
+        if ($this->result >= 1 && $this->result <= 7) {
             return $this->result-1;
         }
-        elseif ($this->result >= 7 && $this->result <= 12) {
-            return 6-($this->result-6); // 6-(x-6) = 6-x+6 = 12-x
+        elseif ($this->result >= 8 && $this->result <= 14) {
+            return 6-($this->result-8); // 6-(x-8) = 6-x+8 = 14-x
         }
         else {
             return null;
