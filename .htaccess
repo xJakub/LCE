@@ -1,3 +1,11 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule (.*) index.php
+
+<FilesMatch "\.(js|css)$">
+Header set Cache-Control "max-age=3600, public"
+</FilesMatch>
+
+<FilesMatch "\.(png|jpg)$">
+Header set Cache-Control "max-age=86400, public"
+</FilesMatch>

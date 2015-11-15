@@ -142,7 +142,7 @@ class BetsRanking implements PublicSection
                             <td>
                                 <div class="inblock">
                                     <div class="teamimg64">
-                                        <img src="/img/<?= $team1->getLink() ?>.png" class="<?= $match->getWinner() == $team1->teamid ? '' : 'grayscale' ?>">
+                                        <img src="/<?= $team1->getImageLink(64, 64) ?>" class="<?= $match->getWinner() == $team1->teamid ? '' : 'grayscale' ?>">
                                     </div>
                                     <? if ($bet->teamid == $team1->teamid) { ?>
                                         <br><i style="font-size:11px">Votado</i>
@@ -155,7 +155,7 @@ class BetsRanking implements PublicSection
 
                                 <div class="inblock">
                                     <div class="teamimg64">
-                                        <img src="/img/<?= $team2->getLink() ?>.png" class="<?= $match->getWinner() == $team2->teamid ? '' : 'grayscale' ?>">
+                                        <img src="/<?= $team2->getImageLink(64, 64) ?>" class="<?= $match->getWinner() == $team2->teamid ? '' : 'grayscale' ?>">
                                     </div>
                                     <? if ($bet->teamid == $team2->teamid) { ?>
                                         <br><i style="font-size:11px">Votado</i>

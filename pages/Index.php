@@ -141,7 +141,7 @@ class Index implements PublicSection {
                             <a href="/authenticate/" class="login">&iexcl;Entra para ver tus votos!</a>
                         <? } ?>
                     <? } ?>
-                    <a href="/equipos/<?=$team1->getLink()?>/"><img src="/img/<?=$team1->getLink()?>.png"></a>
+                    <a href="/equipos/<?=$team1->getLink()?>/"><img src="/<?=$team1->getImageLink(200, 150)?>"></a>
                 </div>
                 <div class="vsbox">
                     VS
@@ -182,7 +182,7 @@ class Index implements PublicSection {
                             <a href="/authenticate/" class="login">&iexcl;Entra para ver tus votos!</a>
                         <? } ?>
                     <? } ?>
-                    <a href="/equipos/<?=$team2->getLink()?>/"><img src="/img/<?=$team2->getLink()?>.png"></a>
+                    <a href="/equipos/<?=$team2->getLink()?>/"><img src="/<?=$team2->getImageLink(200, 150)?>"></a>
                 </div>
             </div>
             <?

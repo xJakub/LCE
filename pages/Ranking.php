@@ -92,7 +92,7 @@ class Ranking implements PublicSection
                     <td><?= $pos+1 ?>º</td>
                     <td style="text-align: left">
                         <div class="teamimg64">
-                            <img src="/img/<?=$team->getLink()?>.png">
+                            <img src="/<?=$team->getImageLink(64, 64)?>">
                         </div>
                         <a href="/equipos/<?=$team->getLink()?>/" class="inblock" style="vertical-align:middle">
                             <?= $team->name ?>

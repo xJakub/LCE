@@ -53,7 +53,7 @@ class Team_Index implements PublicSection
 
         ?>
         <div class="inblock" style="margin-right: 16px">
-            <img src="/img/<?=$this->team->getLink()?>.png" alt="Logo" class="teamlogo"><br>
+            <img src="/<?=$this->team->getImageLink(300, 200)?>" alt="Logo" class="teamlogo"><br>
             <a href="https://twitter.com/hashtag/<?=$this->team->getHashtag()?>" target="_blank">#<?=$this->team->getHashtag()?></a>
             <div style="height:2px"></div>
             <a href="https://twitter.com/<?=$this->team->username?>" target="_blank">@<?=$this->team->username?></a>
