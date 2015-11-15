@@ -6,6 +6,7 @@
  * Time: 22:18
  */
 
+ob_start('ob_gzhandler');
 session_start();
 
 require "vendor/autoload.php";

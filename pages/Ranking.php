@@ -84,12 +84,13 @@ class Ranking implements PublicSection
              */
             $teams = Model::indexBy(Team::find('1=1'), 'teamid');
 
+            $lastTiebreakers = null;
             foreach(array_keys($tiebreakers) as $pos => $teamid) {
                 $team = $teams[$teamid];
 
                 ?>
                 <tr>
-                    <td><?= $pos+1 ?>º</td>
+                    <td><?= ($lastTiebreakers != $tiebreakers[$teamid]) ? ($pos+1).'º' : '' ?></td>
                     <td style="text-align: left">
                         <div class="teamimg64">
                             <img src="/<?=$team->getImageLink(64, 64)?>">
@@ -104,6 +105,7 @@ class Ranking implements PublicSection
                     <td><?= $deaths[$teamid] ?></td>
                 </tr>
                 <?
+                $lastTiebreakers = $tiebreakers[$teamid];
             }
             ?>
         </table>

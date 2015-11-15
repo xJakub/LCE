@@ -191,10 +191,12 @@ class BetsRanking implements PublicSection
                 </thead>
 
                 <?
+                $lastTiebreakers = null;
                 foreach(array_keys($tiebreakers) as $pos => $userid) {
+                    unset($tiebreakers[$userid][2]);
                     ?>
                     <tr>
-                        <td><?= $pos+1 ?>º</td>
+                        <td><?= ($lastTiebreakers != $tiebreakers[$userid]) ? ($pos+1).'º' : '' ?></td>
                         <td style="text-align: left">
                             <div class="inblock" style="vertical-align: middle">
                                 <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">
@@ -212,6 +214,7 @@ class BetsRanking implements PublicSection
                         <td><?= $totalBets[$userid]-$correctBets[$userid] ?></td>
                     </tr>
                     <?
+                    $lastTiebreakers = $tiebreakers[$userid];
                 }
                 ?>
             </table>
