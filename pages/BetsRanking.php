@@ -192,11 +192,16 @@ class BetsRanking implements PublicSection
 
                 <?
                 $lastTiebreakers = null;
+                $lastPos = 0;
                 foreach(array_keys($tiebreakers) as $pos => $userid) {
                     unset($tiebreakers[$userid][2]);
+
+                    if ($lastTiebreakers != $tiebreakers[$userid]) {
+                        $lastPos = $pos;
+                    }
                     ?>
                     <tr>
-                        <td><?= ($lastTiebreakers != $tiebreakers[$userid]) ? ($pos+1).'º' : '' ?></td>
+                        <td><?= $lastPos+1 ?>º</td>
                         <td style="text-align: left">
                             <div class="inblock" style="vertical-align: middle">
                                 <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">

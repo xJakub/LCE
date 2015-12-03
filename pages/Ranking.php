@@ -62,7 +62,7 @@ class Ranking implements PublicSection
         }
 
         foreach(array_keys($kills) as $teamid) {
-            $tiebreakers[$teamid] = array($wins[$teamid], -$deaths[$teamid], $kills[$teamid], -$deaths[$teamid]);
+            $tiebreakers[$teamid] = array($wins[$teamid], $kills[$teamid], -$deaths[$teamid]);
         }
         arsort($tiebreakers);
 
@@ -85,12 +85,16 @@ class Ranking implements PublicSection
             $teams = Model::indexBy(Team::find('1=1'), 'teamid');
 
             $lastTiebreakers = null;
+            $lastPos = 0;
             foreach(array_keys($tiebreakers) as $pos => $teamid) {
                 $team = $teams[$teamid];
+                if ($lastTiebreakers != $tiebreakers[$teamid]) {
+                    $lastPos = $pos;
+                }
 
                 ?>
                 <tr>
-                    <td><?= ($lastTiebreakers != $tiebreakers[$teamid]) ? ($pos+1).'º' : '' ?></td>
+                    <td><?= $lastPos+1 ?>º</td>
                     <td style="text-align: left">
                         <div class="teamimg64">
                             <img src="/<?=$team->getImageLink(64, 64)?>">

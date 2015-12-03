@@ -27,4 +27,10 @@ $(function() {
 
         return false;
     });
+
+    $('#selectNumber').change(function() {
+        var number = $(this).val();
+        $('.playerEdit').hide();
+        $('.playerEdit.player'+number).show();
+    })
 });

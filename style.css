@@ -179,6 +179,10 @@ a:hover {
     vertical-align: top;
 }
 
+.middle {
+    vertical-align: middle;
+}
+
 table {
     text-align: center;
     margin: 0 auto;

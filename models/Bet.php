@@ -14,5 +14,6 @@ class Bet extends Model
     public $dateline;
     public $userid;
     public $username;
+    public $avatar;
 }
 Bet::init('bets', 'betid');
