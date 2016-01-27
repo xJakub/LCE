@@ -42,6 +42,9 @@ $router->addRoute("/equipos/{$rDir}/", array('Team_Index'));
 $router->addRoute("/clasificacion/", array('Ranking'));
 $router->addRoute("/quiniela/", array('BetsRanking'));
 
+$router->addRoute("/unete/", array('JoinUs'));
+$router->addRoute("/normas/", array('Rules'));
+
 
 $router->addRoute(".*", array('Error_404'));
 

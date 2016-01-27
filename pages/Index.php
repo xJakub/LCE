@@ -19,6 +19,10 @@ class Index implements PublicSection {
         while($time >= Match::getPublishDateForWeek($this->maxWeek)) {
             $this->maxWeek++;
         }
+
+        $maxWeekMatch = Match::findOne('1=1 order by week desc limit 1');
+        $this->maxWeek = min($this->maxWeek, $maxWeekMatch->week);
+
         $this->week = $this->maxWeek;
 
         if ($requestedWeek && $requestedWeek < $this->week) {

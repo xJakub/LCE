@@ -47,7 +47,9 @@ class Match extends Model
     }
 
     static function getPublishDateForWeek($week) {
-        return mktime(17, 00, 00, 11, 1 + 7 * ($week-1), 2015);
+        $delay = 0;
+        if ($week >= 9) $delay += 2;
+        return mktime(17, 00, 00, 11, 1 + 7 * ($week-1+$delay), 2015);
     }
 
     function getPublishDate() {

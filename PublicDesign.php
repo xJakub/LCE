@@ -58,6 +58,9 @@ class PublicDesign extends HTMLResponse
         $this->addToTopMenu('/clasificacion/', 'Clasificación', '/clasificacion/');
         $this->addToTopMenu('/quiniela/', 'Quiniela', '/quiniela/');
 
+        $this->addToTopMenu('/normas/', 'Normas', '/normas/');
+        $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
+
         $this->addJavaScript('/lce.js', true);
     }
 

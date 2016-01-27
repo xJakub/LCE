@@ -62,7 +62,7 @@ class Ranking implements PublicSection
         }
 
         foreach(array_keys($kills) as $teamid) {
-            $tiebreakers[$teamid] = array($wins[$teamid], $kills[$teamid], -$deaths[$teamid]);
+            $tiebreakers[$teamid] = array($wins[$teamid], $kills[$teamid]-$deaths[$teamid], $kills[$teamid], -$deaths[$teamid]);
         }
         arsort($tiebreakers);
 

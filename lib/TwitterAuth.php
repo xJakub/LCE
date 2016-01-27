@@ -100,6 +100,10 @@ class TwitterAuth
         return $_SESSION['twitter-username'];
     }
 
+    public static function getAvatar() {
+        return $_SESSION['twitter-avatar'];
+    }
+
     public static function getTeam($username = null) {
         if ($username === null) {
             $username = self::getUserName();

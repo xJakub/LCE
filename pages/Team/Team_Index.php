@@ -250,78 +250,81 @@ class Team_Index implements PublicSection
     {
         ?>
         <h2>Editar jugadores iniciales</h2>
-        <div style="text-align: left">
-        <select id="selectNumber">
-            <option>-- Elige jugador --</option>
-            <?
-            for ($i=1; $i<=count($this->tiers); $i++) {
-                ?><option value="<?=$i?>">Jugador <?= $i ?> (<?= $this->tiers[$i-1] ?>)</option><?
-            }
+        <div class="inblock" style="display: inline-block; text-align: left">
+        <?
+        for ($i=1; $i<=count($this->tiers); $i++) {
+            $player = Player::findOne('teamid = ? and number = ?', [$this->team->teamid, $i]);
+            $pname = $player ? $player->name : '';
             ?>
-        </select>
-        <div class="inblock">
-            <?
-            for ($i=1; $i<=count($this->tiers); $i++) {
-                $player = Player::findOne('teamid = ? and number = ?', [$this->team->teamid, $i]);
-                $pname = $player ? $player->name : '';
-                ?>
-                <form method="post" class="playerEdit player<?=$i?>" style="display:none" action="<?=HTMLResponse::getRoute()?>">
-                    <select name="name">
-                        <option value="">-- Elige Pokémon --</option>
-                        <?
-                        foreach(Player::getAvailable() as $sprite) {
-                            ?>
-                            <option <?=$pname==$sprite?'selected':''?> value="<?=htmlentities($sprite)?>">
-                                <?= htmlentities(ucwords($sprite)) ?>
-                            </option>
-                            <?
-                        }
+            <form method="post" class="playerEdit player<?=$i?>" action="<?=HTMLResponse::getRoute()?>">
+                <div style="width:80px" class="inblock middle">
+                    Jugador <?= $i ?>
+                </div>
+                <div style="width:80px; text-align: center; color: #666" class="inblock middle">
+                    <?= $this->tiers[$i-1] ?>
+                </div>
+                <select name="name" onchange="$(this).closest('form').submit()">
+                    <option value="">-- Elige Pokémon --</option>
+                    <?
+                    foreach(Player::getAvailable() as $sprite) {
                         ?>
-                    </select>
-                    <input type="hidden" name="number" value="<?=$i?>">
-                    <button type="submit">Cambiar</button>
-                </form>
-                <?
-            }
-            ?></div>
+                        <option <?=$pname==$sprite?'selected':''?> value="<?=htmlentities($sprite)?>">
+                            <?= htmlentities(ucwords($sprite)) ?>
+                        </option>
+                        <?
+                    }
+                    ?>
+                </select>
+                <input type="hidden" name="number" value="<?=$i?>">
+            </form>
+            <div style="margin-bottom: 6px"></div>
+            <?
+        }
+        ?>
         </div><?
     }
 
     private function showPlayers()
     {
-        $players = Player::find('teamid = ? and name != ?', [$this->team->teamid, '']);
+        $players = Player::find('teamid = ? and name != ? order by number asc', [$this->team->teamid, '']);
         if (!$players) return;
+
+        $playersByNumber = Model::indexBy($players, 'number');
+
         ?>
         <h2>Jugadores iniciales</h2>
-        <table>
-            <thead>
-            <tr>
-                <td>#</td>
-                <td>Nombre</td>
-                <td>Obtención</td>
-            </tr>
-            </thead>
-            <? foreach($players as $player) {
+        <? for ($y=0; $y<4; $y++) {
+        ?><table>
+        <thead>
+        <tr>
+            <td colspan="3">
+                <?= $this->tiers[$y * 3] ?>
+            </td>
+        </tr>
+        </thead><tr><?
+            for ($x=0; $x<3; $x++) {
+                $number = $y*3 + $x + 1;
+                $player = $playersByNumber[$number];
                 ?>
-                <tr>
-                    <td>Jugador <?= $player->number ?><br>
-                        <i><?= $this->tiers[$player->number-1] ?></i><br>
-                        <br>
-                        <b><?= ucwords($player->name) ?></b>
-
-                    </td>
-                    <td style="text-align: left;">
-                        <div class="inblock middle" style="text-align: center">
-                            <img src="/img/sprites/<?=$player->name?>.png"><br>
-                        </div>
-                        <div class="inblock middle">
-                        </div>
-                    </td>
-                    <td>Elegido en Jornada 1</td>
-                </tr>
+                <td>
+                    <div style="width: 144px">
+                        <? if ($player) { ?>
+                            <div class="inblock middle" style="text-align: center">
+                                <img src="/img/sprites/<?= $player->name ?>.png">
+                            </div><br>
+                            <b><?= ucwords($player->name) ?></b>
+                        <? } else { ?>
+                            <div class="inblock middle" style="text-align: center">
+                                <div style="width:100px; height:100px"
+                            </div><br>
+                        <? } ?>
+                    </div>
+                </td>
                 <?
-            } ?>
-        </table>
+            }
+            ?></tr></table>
+            <div style="height: 6px"></div><?
+    } ?>
         <?
     }
 

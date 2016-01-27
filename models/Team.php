@@ -40,7 +40,14 @@ class Team extends Model {
         return (
             strtolower($this->username) === strtolower($username)
             || strtolower($username) === 'xjakub'
+            || strtolower($username) === 'senixirabix'
+            || strtolower($username) === 'soldiermagma'
         );
+    }
+
+    static function getUsersTeam() {
+        if (!TwitterAuth::isLogged()) return null;
+        return Team::find('username = ?', [TwitterAuth::getUserName()]);
     }
 
     function getImageLink($width = null, $height = null) {
