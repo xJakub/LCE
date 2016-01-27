@@ -42,7 +42,7 @@ class JoinUs implements PublicSection
                 Ya estás en la LCE.
             </div>
 
-            <table style="margin: 8px; width: 750px; margin: 0 auto">
+            <table style="margin: 8px; max-width: 750px; margin: 0 auto">
                 <thead>
                 <tr>
                     <td>Lista de solicitudes</td>
