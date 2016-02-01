@@ -407,6 +407,18 @@ abstract class Model implements JsonSerializable {
         return false;
     }
 
+    static function truncate($really = false) {
+        $class = get_called_class();
+        $table = self::$tables[$class];
+
+        if ($really === true) {
+            R::exec("truncate table `$table`");
+            return true;
+        }
+
+        return false;
+    }
+
     function JSONSerialize() {
         $class = get_called_class();
         $mappings = isset(self::$jsonMappings[$class])?self::$jsonMappings[$class]:array();

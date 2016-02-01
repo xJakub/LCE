@@ -8,6 +8,7 @@
  */
 class Batch implements PublicSection
 {
+    private $results;
 
     public function setDesign(PublicDesign $response)
     {
@@ -47,9 +48,8 @@ class Batch implements PublicSection
         }
 
         if (count($teams) >= 1 && count($teams) != count(Team::find('1=1'))) {
-            foreach(Team::find('1=1') as $team) {
-                $team->delete();
-            }
+            Team::truncate(true);
+            Match::truncate(true);
             Model::saveAll($teams);
             ?>Equipos actualizados.<br><?
         }
@@ -93,9 +93,7 @@ class Batch implements PublicSection
         }
 
         if (count($matches) >= 1 && count($matches) != count(Match::find('1=1'))) {
-            foreach(Match::find('1=1') as $match) {
-                $match->delete();
-            }
+            Match::truncate(true);
             Model::saveAll($matches);
             ?>Enfrentamientos actualizados.<br><?
         }
@@ -105,8 +103,21 @@ class Batch implements PublicSection
 
     }
 
-    public function makeImages() {
+    public function saveResults() {
+        $this->results = [];
+        foreach(Match::find('1=1') as $match) {
+            $this->results[$match->matchid] = $match->result;
+        }
+    }
 
+    public function restoreResults() {
+        $matches = Match::find('1=1');
+        foreach($matches as $match) {
+            if (isset($this->results[$match->matchid])) {
+                $match->result = $this->results[$match->matchid];
+            }
+        }
+        Match::saveAll($matches);
     }
 
     /**
@@ -114,7 +125,9 @@ class Batch implements PublicSection
      */
     public function show()
     {
+        $this->saveResults();
         $this->makeTeams();
         $this->makeMatches();
+        $this->restoreResults();
     }
 }
