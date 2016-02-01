@@ -31,65 +31,78 @@ class Batch implements PublicSection
     }
 
     public function makeTeams() {
-        if (Team::find('1=1') === array()) {
 
-            $teams = [];
-            foreach (explode("\n", file_get_contents("teams.txt")) as $line) {
-                $parts = explode(" - ", $line);
+        $teams = [];
+        foreach (explode("\n", file_get_contents("teams.txt")) as $line) {
+            $parts = explode(" - ", $line);
 
-                if (count($parts) != 2) continue;
+            if (count($parts) != 2) continue;
 
-                list($name, $username) = $parts;
+            list($name, $username) = $parts;
 
-                $team = Team::create();
-                $team->name = trim($name);
-                $team->username = trim($username);
-                $teams[] = $team;
+            $team = Team::create();
+            $team->name = trim($name);
+            $team->username = trim($username);
+            $teams[] = $team;
+        }
+
+        if (count($teams) >= 1 && count($teams) != count(Team::find('1=1'))) {
+            foreach(Team::find('1=1') as $team) {
+                $team->delete();
             }
-
             Model::saveAll($teams);
+            ?>Equipos actualizados.<br><?
+        }
+        else {
+            ?>No hay cambios en los equipos.<br><?
         }
     }
 
     public function makeMatches() {
-        if (Match::find('1=1') === array()) {
 
-            $teams = Team::find('1=1');
-            $teamIdByName = Model::pluck($teams, 'teamid', 'name');
+        $teams = Team::find('1=1');
+        $teamIdByName = Model::pluck($teams, 'teamid', 'name');
 
-            $count = 0;
-            $week = 1;
-            $matches = [];
+        $week = 0;
+        $matches = [];
 
-            foreach (explode("\n", file_get_contents("matches.txt")) as $line) {
-                $parts = explode("VS", $line);
-                if (count($parts) != 2) continue;
+        foreach (explode("\n", file_get_contents("matches.txt")) as $line) {
+            $parts = explode("VS", $line);
+            if (count($parts) == 1 && substr(trim($line), 0, 2) == '--') {
+                $week++;
+            }
+            if (count($parts) != 2) continue;
 
-                list($name1, $name2) = $parts;
-                $name1 = trim($name1);
-                $name2 = trim($name2);
+            list($name1, $name2) = $parts;
+            $name1 = trim($name1);
+            $name2 = trim($name2);
 
-                $match = Match::create();
-                $match->team1id = $teamIdByName[$name1];
-                $match->team2id = $teamIdByName[$name2];
-                $match->week = $week;
-                $matches[] = $match;
+            $match = Match::create();
+            $match->team1id = $teamIdByName[$name1];
+            $match->team2id = $teamIdByName[$name2];
+            $match->week = $week;
+            $matches[] = $match;
 
-                if (!$match->team1id) {
-                    die("Unknown team: $name1");
-                }
-                if (!$match->team2id) {
-                    die("Unknown team: $name2");
-                }
-
-                if (++$count % 6 == 0) {
-                    $week++;
-                }
-
+            if (!$match->team1id) {
+                die("Equipo desconocido: $name1");
+            }
+            if (!$match->team2id) {
+                die("Equipo desconocido: $name2");
             }
 
-            Model::saveAll($matches);
         }
+
+        if (count($matches) >= 1 && count($matches) != count(Match::find('1=1'))) {
+            foreach(Match::find('1=1') as $match) {
+                $match->delete();
+            }
+            Model::saveAll($matches);
+            ?>Enfrentamientos actualizados.<br><?
+        }
+        else {
+            ?>No hay cambios en los enfrentamientos.<br><?
+        }
+
     }
 
     public function makeImages() {
