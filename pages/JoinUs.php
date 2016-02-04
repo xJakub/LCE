@@ -36,11 +36,37 @@ class JoinUs implements PublicSection
     public function show()
     {
         if (Team::getUsersTeam()) {
-
+            $voteNames = ['1' => 'A favor', '0' => 'Indiferente', '-1' => 'En contra'];
+            $ownVotes = Model::indexBy(ApplicationVote::getUserVotes(), 'applicationid');
             ?>
             <div style="color: blue; margin: 6px">
                 Ya estás en la LCE.
             </div>
+
+            <?
+            $orders = ['dateline' => 'Ordenar por fecha', 'score' => 'Ordenar por puntuación'];
+
+            $order = HTMLResponse::fromGET('order', '');
+            if (!in_array($order, array_keys($orders))) {
+                list($order) = array_keys($orders);
+            }
+
+            ?>
+            <form action="<?=HTMLResponse::getRoute()?>" method="get">
+                <select name="order" onchange="$(this).parent().submit()">
+                    <?
+                    foreach($orders as $orderType => $orderLabel) {
+                        ?>
+                        <option value="<?=$orderType?>" <?=$order == $orderType ? 'selected' : ''?>>
+                            <?=$orderLabel?>
+                        </option>
+                        <?
+                    }
+                    ?>
+                </select>
+            </form>
+
+            <br>
 
             <table style="margin: 8px; max-width: 750px; margin: 0 auto">
                 <thead>
@@ -49,26 +75,64 @@ class JoinUs implements PublicSection
                 </tr>
                 </thead>
                 <?
-                foreach(Application::find('1=1 order by dateline desc') as $application) {
+                $applications = Application::find("1=1 order by dateline desc");
+
+                if ($order == 'score') {
+                    $scores = [];
+                    foreach($applications as $application) {
+                        $scores[] = -$application->getScore();
+                    }
+                    array_multisort($scores, $applications);
+                }
+
+                foreach($applications as $application) {
+                    $vote = HTMLResponse::fromPOST('vote', null);
+                    $voteApplication = HTMLResponse::fromPOST('applicationid', null);
+
+                    if ($vote !== null && $voteApplication !== null && $voteApplication == $application->applicationid) {
+                        /**
+                         * @var $currentVote ApplicationVote
+                         */
+                        $currentVote = $ownVotes[$application->applicationid];
+                        if (!$currentVote) {
+                            $currentVote = ApplicationVote::create();
+                            $currentVote->applicationid = $application->applicationid;
+                        }
+                        $currentVote->dateline = time();
+                        $currentVote->vote = $vote;
+                        $currentVote->userid = TwitterAuth::getUserId();
+                        $currentVote->username = TwitterAuth::getUserName();
+                        $currentVote->avatar = TwitterAuth::getAvatar();
+                        $currentVote->save();
+
+                        if ($vote === "") {
+                            $currentVote->delete();
+                            $currentVote = null;
+                        }
+
+                        $ownVotes[$application->applicationid] = $currentVote;
+                    }
+
                     ?>
-                    <tr>
+                    <tr class="application" id="application<?=$application->applicationid?>">
                         <td style="text-align: left">
-                            <div class="inblock middle" style="width: 160px">
+                            <div class="inblock middle" style="width: 200px">
                                 <a href="http://twitter.com/<?=htmlentities($application->username)?>" target="_blank">
                                     <img class="middle" src="<?= htmlentities($application->avatar) ?>" style="width:40px; height:40px; border-radius: 20px">
                                 </a>
                                 <div class="inblock middle">
                                     <a href="http://twitter.com/<?=htmlentities($application->username)?>" target="_blank">
                                         <?= htmlentities($application->username) ?>
+                                    </a><br>
+
+                                    <div style="height: 3px"></div>
+
+                                    <a href="<?=htmlentities($application->url)?>" target="_blank">
+                                        Ver canal
                                     </a>
                                 </div>
                             </div>
-                            <div class="inblock middle" style="width: 100px">
-                                <a href="<?=htmlentities($application->url)?>" target="_blank">
-                                    Ver canal
-                                </a>
-                            </div>
-                            <div class="inblock middle" style="width: 150px">
+                            <div class="inblock middle" style="width: 150px; font-size:85%">
                                 <?= $application->captureboard
                                     ? '<div class="success-icon">&#x2714;</div>'
                                     : '<div class="fail-icon">&#x2718</div>' ?>
@@ -77,8 +141,56 @@ class JoinUs implements PublicSection
                                     : 'Sin capturadora' ?>
                             </div>
 
-                            <div class="inblock middle" style="width: 150px">
-                                <i><?= date("Y/m/d H:i:s", $application->dateline) ?></i>
+                            <div class="inblock middle" style="width: 120px; font-size:85%">
+                                <?
+                                if (!$ownVotes[$application->applicationid]) {
+                                    ?>
+                                    <a href="javascript:void(0)" onclick="showApplicationVote(this)">
+                                        No has votado
+                                    </a>
+                                    <?
+                                }
+                                else {
+                                    ?>
+                                    <span style="cursor: pointer; line-height: 1.3em" onclick="showApplicationVote(this)">
+                                        Has votado<br>
+                                        <b><?= $voteNames[$ownVotes[$application->applicationid]->vote] ?></b>
+                                    </span>
+                                    <?
+                                }
+                                ?>
+                                <div class="applicationvote" style="display: none">
+                                    <form action="<?=HTMLResponse::getRoute()?>?order=<?=$order?>#application<?=$application->applicationid?>" method="post">
+                                        <select name="vote" onchange="$(this).parent().submit()">
+                                            <option value="">(Sin voto)</option>
+                                            <?
+                                            foreach($voteNames as $voteValue => $voteName) {
+                                                ?>
+                                                <option value="<?=$voteValue?>" <?=$ownVotes[$application->applicationid] && $ownVotes[$application->applicationid]->vote==$voteValue?'selected':''?>>
+                                                    <?=$voteName?>
+                                                </option>
+                                                <?
+                                            }
+                                            ?>
+                                        </select>
+                                        <input type="hidden" name="applicationid" value="<?=$application->applicationid?>">
+                                    </form>
+                                </div>
+                            </div>
+
+                            <?
+                            $score = $application->getScore();
+                            $r = 0; $g = 0; $b = 0;
+                            if ($score >= 1) {
+                                $g = round(min(255, abs($score)/5*255));
+                            }
+                            else {
+                                $r = round(min(255, abs($score)/5*255));
+                            }
+                            $color = "rgb($r,$g,$b)";
+                            ?>
+                            <div class="inblock middle" style="width: 90px; color: <?=$color?>">
+                                <?= $score ?> puntos
                             </div>
 
                             <div class="moreless inblock middle" style="width: 150px">
@@ -112,6 +224,41 @@ class JoinUs implements PublicSection
                                 <div>
                                     <?= htmlentities($application->contributions) ?>
                                 </div>
+
+                                <div style="height: 16px"></div>
+
+                                <div>
+                                    <div class="inblock" style="width: 150px; font-weight:bold">
+                                        Fecha de solicitud:
+                                    </div>
+                                    <i><?= date("Y/m/d H:i:s", $application->dateline) ?></i>
+                                </div>
+
+                                <div style="height: 9px"></div>
+
+                                <?
+                                $votes = Model::groupBy($application->getVotes(), 'vote');
+                                foreach($voteNames as $voteValue => $voteName) {
+                                    ?>
+                                    <div class="inblock">
+                                        Votaron <b><?=$voteName?></b> (<?=count($votes[$voteValue])?>):
+                                    </div>
+                                    <div class="inblock">
+                                        <?
+                                        if ($votes[$voteValue]) {
+                                            foreach ($votes[$voteValue] as $vote) {
+                                                ?>
+                                                <a target="_blank" href="https://twitter.com/<?= $vote->username ?>">
+                                                    <?= $vote->username ?>,
+                                                </a>
+                                                <?
+                                            }
+                                        }
+                                        ?>
+                                    </div>
+                                    <div style="height: 5px"></div>
+                                <? } ?>
+
                                 <div style="height: 9px"></div>
 
                             </div>

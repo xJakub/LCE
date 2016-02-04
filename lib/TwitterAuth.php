@@ -57,7 +57,7 @@ class TwitterAuth
 
         $userids = Model::pluck(Bet::find('avatar = "" group by userid limit 100'), 'userid');
 
-        if (count($userids) && preg_match("'^[0-9,]+$'", $userids)) {
+        if (count($userids)) {
             $json = $connection->get('users/lookup', ['user_id' => implode(',', $userids)]);
 
             $newavatars = [];

@@ -34,5 +34,14 @@ class Application extends Model
         }
         return Application::findOne('userid = ?', [$userid]);
     }
+
+    public function getVotes() {
+        return ApplicationVote::find('applicationid = ?', [$this->applicationid]);
+    }
+
+    public function getScore() {
+        $votes = $this->getVotes();
+        return array_sum(Model::pluck($votes, 'vote'));
+    }
 }
 Application::init('applications', 'applicationid');

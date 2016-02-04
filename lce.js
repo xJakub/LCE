@@ -34,3 +34,8 @@ $(function() {
         $('.playerEdit.player'+number).show();
     })
 });
+
+function showApplicationVote(obj) {
+    $(obj).closest('.application').find('.applicationvote').show();
+    $(obj).hide();
+}
