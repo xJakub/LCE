@@ -43,6 +43,7 @@ class Ranking implements PublicSection
 
         foreach($matches as $match) {
             if (!$match->isPublished()) continue;
+            if (Match::getPlayoffsWeek($match->week)) continue;
 
             $winner = $match->getWinner();
             if (!$winner) continue;

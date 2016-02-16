@@ -190,7 +190,7 @@ class JoinUs implements PublicSection
                             $color = "rgb($r,$g,$b)";
                             ?>
                             <div class="inblock middle" style="width: 90px; color: <?=$color?>">
-                                <?= $score ?> puntos
+                                <b><?= $score ?> puntos</b>
                             </div>
 
                             <div class="moreless inblock middle" style="width: 150px">

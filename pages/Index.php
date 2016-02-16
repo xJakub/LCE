@@ -53,6 +53,10 @@ class Index implements PublicSection {
      */
     public function getSubtitle()
     {
+        $playoffsWeek = Match::getPlayoffsWeek($this->week);
+        if ($playoffsWeek) {
+            return "Enfrentamientos de ".strtolower(Match::getWeekName($this->week));
+        }
         return "Enfrentamientos de la jornada {$this->week}";
     }
 
@@ -70,12 +74,18 @@ class Index implements PublicSection {
                 <?
                 if ($this->week > 1) {
                     ?>
-                    <a style="float:left; margin-left: 24px" href="/jornadas/<?=$this->week-1?>/">&lt;&lt; Ver jornada <?=$this->week-1?></a>
+                    <a style="float:left; margin-left: 24px" href="/jornadas/<?=$this->week-1?>/">
+                        &lt;&lt;
+                        Ver <?= strtolower(Match::getWeekName($this->week-1)) ?>
+                        </a>
                     <?
                 }
                 if ($this->week < $this->maxWeek) {
                     ?>
-                    <a style="float:right; margin-right: 24px" href="/jornadas/<?=$this->week+1?>/">Ver jornada <?=$this->week+1?> &gt;&gt;</a>
+                    <a style="float:right; margin-right: 24px" href="/jornadas/<?=$this->week+1?>/">
+                        Ver <?= strtolower(Match::getWeekName($this->week+1)) ?>
+                        &gt;&gt;
+                    </a>
                     <?
                 }
                 ?>
@@ -102,7 +112,7 @@ class Index implements PublicSection {
             $voteUnteamid = HTMLResponse::fromPOST('unteamid','') * 1;
             $voteUnmatchid = HTMLResponse::fromPOST('unmatchid','') * 1;
 
-            if ($canVote && TwitterAuth::isLogged() && !$match->hasVoted() &&
+            if ($canVote && TwitterAuth::isLogged() && !$match->hasVoted() && $match->matchid &&
                 $voteMatchid == $match->matchid && ($voteTeamid == $team1->teamid || $voteTeamid == $team2->teamid)) {
                 $bet = Bet::create();
                 $bet->matchid = $match->matchid;
@@ -135,6 +145,15 @@ class Index implements PublicSection {
             <div class="matchbox">
                 <? $this->showTeamBox($match, $team1, $team1votes, $votesCount) ?>
                 <div class="vsbox">
+                    <? if ($match->isPublished() && $match->getWinner()) {
+                        $score1 = $team1->teamid==$match->getWinner() ? 6-$match->getLooserKills() : 0;
+                        $score2 = $team2->teamid==$match->getWinner() ? 6-$match->getLooserKills() : 0;
+                        ?>
+                        <div style="font-size:90%">
+                            <?=$score1?>-<?=$score2?>
+                        </div>
+                        <?
+                    } ?>
                     VS
                 </div>
                 <? $this->showTeamBox($match, $team2, $team2votes, $votesCount) ?>

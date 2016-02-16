@@ -93,6 +93,14 @@ class Team extends Model {
             return $link;
         }
     }
+
+    public static function getCount() {
+        static $count = null;
+        if ($count === null) {
+            $count = count(Team::find('1=1'));
+        }
+        return $count;
+    }
 }
 
 Team::init('teams', 'teamid');

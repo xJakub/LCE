@@ -117,7 +117,11 @@ class Team_Index implements PublicSection
 
                     ?>
                     <tr>
-                        <td style="height:3em">Jornada <?=$match->week?></td>
+                        <td style="height:3em">
+                            <?
+                            echo Match::getWeekName($match->week);
+                            ?>
+                        </td>
                         <td><?= date("Y-m-d", $date) ?></td>
                         <td style="text-align: center">
                             <!--
@@ -323,7 +327,7 @@ class Team_Index implements PublicSection
                 <?
             }
             ?></tr></table>
-            <div style="height: 6px"></div><?
+        <div style="height: 6px"></div><?
     } ?>
         <?
     }

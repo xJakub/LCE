@@ -96,5 +96,28 @@ class Match extends Model
             return null;
         }
     }
+
+    static function getPlayoffsWeek($week) {
+        $playersCount = Team::getCount();
+        if ($week >= $playersCount) {
+            return $week - $playersCount + 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    static function getWeekName($week) {
+        $playoffsWeek = Match::getPlayoffsWeek($week);
+        $playoffsNames = [null, "Semifinales", "Final"];
+
+        if ($playoffsWeek) {
+            return $playoffsNames[$playoffsWeek-1]
+                ? $playoffsNames[$playoffsWeek-1] : "Playoffs {$playoffsWeek}";
+        }
+        else {
+            return "Jornada {$week}";
+        }
+    }
 }
 Match::init('matches', 'matchid');

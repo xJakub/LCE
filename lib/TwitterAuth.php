@@ -55,7 +55,7 @@ class TwitterAuth
         // Así que aprovechamos el login para coger el avatar del usuario
         // y de los usuarios para los que no tengamos avatares.
 
-        $userids = Model::pluck(Bet::find('avatar = "" group by userid limit 100'), 'userid');
+        $userids = Model::pluck(Bet::find('avatar = "" and userid != "" group by userid limit 100'), 'userid');
 
         if (count($userids)) {
             $json = $connection->get('users/lookup', ['user_id' => implode(',', $userids)]);
