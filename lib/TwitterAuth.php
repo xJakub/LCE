@@ -18,9 +18,19 @@ class TwitterAuth
     public static function getAuthorizeURL($route = "/")
     {
         $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
-            $response = $connection->oauth("oauth/request_token", array("oauth_callback" => "http://".$_SERVER['SERVER_NAME'].$route));
+        $response = $connection->oauth("oauth/request_token", array("oauth_callback" => "http://".$_SERVER['SERVER_NAME'].$route));
         $_SESSION['oauth_token'] = $response['oauth_token'];
         $_SESSION['oauth_token_secret'] = $response['oauth_token_secret'];
+        $url = $connection->url("oauth/authorize", array("oauth_token" => $response['oauth_token']));
+        return $url;
+    }
+
+    public static function getBotAuthorizeURL($route = "/")
+    {
+        $connection = new TwitterOAuth(CONSUMER_KEY_BOT, CONSUMER_SECRET_BOT);
+        $response = $connection->oauth("oauth/request_token", array("oauth_callback" => "http://".$_SERVER['SERVER_NAME'].$route));
+        $_SESSION['oauth_token_bot'] = $response['oauth_token'];
+        $_SESSION['oauth_token_secret_bot'] = $response['oauth_token_secret'];
         $url = $connection->url("oauth/authorize", array("oauth_token" => $response['oauth_token']));
         return $url;
     }
@@ -45,6 +55,38 @@ class TwitterAuth
         }
 
         return false;
+    }
+
+    public static function doBotLogin() {
+        $oauth_token = HTMLResponse::fromGETorPOST('oauth_token');
+        $oauth_verifier = HTMLResponse::fromGETorPOST('oauth_verifier');
+
+        if ($oauth_token && $oauth_verifier && $oauth_token === $_SESSION['oauth_token_bot']) {
+            $connection = new TwitterOAuth(CONSUMER_KEY_BOT, CONSUMER_SECRET_BOT, $oauth_token, $_SESSION['oauth_token_secret_bot']);
+            $access_token = $connection->oauth("oauth/access_token", array("oauth_verifier" => $oauth_verifier));
+            if ($userid = $access_token['user_id']) {
+                $botConfig['twitter-userid'] = $userid;
+                $botConfig['twitter-username'] = $access_token['screen_name'];
+                $botConfig['oauth_token'] = $access_token['oauth_token'];
+                $botConfig['oauth_token_secret'] = $access_token['oauth_token_secret'];
+                $botConfig['dateline'] = time();
+
+                unset($_SESSION['oauth_token_bot']);
+
+                $con = "<?php return ".var_export($botConfig, true)."; ?>";
+
+                file_put_contents("botconfig.php", $con);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function getBotConfig() {
+        return file_exists("botconfig.php") ?
+            include("botconfig.php") :
+            array();
     }
 
     private static function afterLogin()
@@ -114,5 +156,19 @@ class TwitterAuth
         if ($team && strtolower($team->username) === strtolower($username)) {
             return $team;
         }
+    }
+
+    public static function isBot() {
+        return self::getUserName() == 'LCE_Pokemon';
+    }
+
+    public static function botSendPrivateMessage($dest, $message) {
+        static $botConnection = null;
+        if (!$botConnection) {
+            $botConfig = self::getBotConfig();
+            $botConnection = new TwitterOAuth(CONSUMER_KEY_BOT, CONSUMER_SECRET_BOT,
+                $botConfig['oauth_token'], $botConfig['oauth_token_secret']);
+        }
+        return $botConnection->post('direct_messages/new', ['text'=>$message, 'screen_name'=>$dest]);
     }
 }

@@ -10,6 +10,9 @@ class Team extends Model {
     public $teamid;
     public $name;
     public $username;
+    public $ispublic;
+    public $isadmin;
+    public $ismember;
 
     /**
      * @param $link
@@ -38,16 +41,39 @@ class Team extends Model {
         }
 
         return (
-            strtolower($this->username) === strtolower($username)
-            || strtolower($username) === 'xjakub'
-            || strtolower($username) === 'senixirabix'
-            || strtolower($username) === 'soldiermagma'
+            ($this->ismember && strtolower($this->username) === strtolower($username))
+            || self::isAdmin()
         );
+    }
+
+    static function isSuperAdmin($username = null) {
+        if ($username === null) {
+            $username = TwitterAuth::getUserName();
+        }
+
+        if (strtolower($username) == 'xjakub') return true;
+        if (strtolower($username) == 'senixirabix') return true;
+    }
+
+    static function isAdmin($username = null) {
+        if ($username === null) {
+            $username = TwitterAuth::getUserName();
+        }
+
+        return Team::isSuperAdmin() || !!Team::findOne('lower(username) = ? and isadmin', [strtolower($username)]);
     }
 
     static function getUsersTeam() {
         if (!TwitterAuth::isLogged()) return null;
         return Team::find('username = ?', [TwitterAuth::getUserName()]);
+    }
+
+    static function isMember($username = null) {
+        if ($username === null) {
+            $username = TwitterAuth::getUserName();
+        }
+
+        return !!Team::findOne('lower(username) = ? and ismember', [strtolower($username)]);
     }
 
     function getImageLink($width = null, $height = null) {

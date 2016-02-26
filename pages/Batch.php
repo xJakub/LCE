@@ -35,15 +35,36 @@ class Batch implements PublicSection
 
         $teams = [];
         foreach (explode("\n", file_get_contents("teams.txt")) as $line) {
-            $parts = explode(" - ", $line);
+            $parts = explode(" - ", " $line ");
 
             if (count($parts) != 2) continue;
 
             list($name, $username) = $parts;
+            $username = trim($username);
+            $name = trim($name);
 
             $team = Team::create();
-            $team->name = trim($name);
-            $team->username = trim($username);
+            $team->isadmin = false;
+            $team->ismember = true;
+
+            if ($username[0] == '@') {
+                $username = substr($username, 1);
+                $team->isadmin = true;
+            }
+            else if ($username[0] == '!') {
+                $username = substr($username, 1);
+                $team->ismember = false;
+            }
+
+            $team->name = $name;
+            $team->username = $username;
+            $team->ispublic = true;
+
+            if (!strlen($name)) {
+                $team->name = $team->username;
+                $team->ispublic = false;
+            }
+
             $teams[] = $team;
         }
 

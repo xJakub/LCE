@@ -77,7 +77,7 @@ class Index implements PublicSection {
                     <a style="float:left; margin-left: 24px" href="/jornadas/<?=$this->week-1?>/">
                         &lt;&lt;
                         Ver <?= strtolower(Match::getWeekName($this->week-1)) ?>
-                        </a>
+                    </a>
                     <?
                 }
                 if ($this->week < $this->maxWeek) {
@@ -170,6 +170,9 @@ class Index implements PublicSection {
      */
     private function showTeamBox($match, $team, $team1votes, $votesCount)
     {
+        $video = Video::findOne('matchid = ? and teamid = ?',
+            [$match->matchid, $team->teamid]);
+
         $canVote = $this->canVote;
 
         $team1per = 50;
@@ -209,8 +212,14 @@ class Index implements PublicSection {
                 <? } ?>
             <? } else { ?>
                 <? if (TwitterAuth::isLogged()) { ?>
-                    <? if ($match->hasVoted() == $team->teamid) { ?>
-                        <span class="login">Has votado por este equipo</span>
+                    <? if (!$match->isPublished() || !$match->getWinner()) { ?>
+                        <? if ($match->hasVoted() == $team->teamid) { ?>
+                            <span class="login">Has votado por este equipo</span>
+                        <? } ?>
+                    <? } else if ($video) { ?>
+                        <a class="login" href="<?=htmlentities($video->link)?>" target="_blank">
+                            Ver combate
+                        </a>
                     <? } ?>
                 <? } else { ?>
                     <a href="<?= HTMLResponse::getRoute() ?>?authenticate=1" class="login">&iexcl;Entra para ver tus votos!</a>

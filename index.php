@@ -44,6 +44,10 @@ $router->addRoute("/quiniela/", array('BetsRanking'));
 
 $router->addRoute("/unete/", array('JoinUs'));
 $router->addRoute("/normas/", array('Rules'));
+$router->addRoute("/votaciones/", array('Polls'));
+$router->addRoute("/votaciones/crear/", array('AddPoll'));
+$router->addRoute("/votaciones/{$rNum}/", array('ViewPoll'));
+$router->addRoute("/comunicados/", array('Notices'));
 
 
 $router->addRoute(".*", array('Error_404'));

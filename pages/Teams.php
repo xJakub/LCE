@@ -35,7 +35,7 @@ class Teams implements PublicSection {
      */
     public function show()
     {
-        foreach(Team::find('1=1 order by teamid asc') as $team) {
+        foreach(Team::find('ispublic order by teamid asc') as $team) {
             ?>
             <div class="teambox">
                 <a class="login" href="/equipos/<?=$team->getLink()?>/"><?=htmlentities($team->name)?></a>

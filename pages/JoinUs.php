@@ -44,6 +44,8 @@ class JoinUs implements PublicSection
             </div>
 
             <?
+            if (!Team::isAdmin()) return;
+
             $orders = ['dateline' => 'Ordenar por fecha', 'score' => 'Ordenar por puntuación'];
 
             $order = HTMLResponse::fromGET('order', '');

@@ -20,12 +20,20 @@ class PublicDesign extends HTMLResponse
             HTMLResponse::exitWithRoute(TwitterAuth::getAuthorizeURL(HTMLResponse::getRoute()));
         }
 
+
         if (HTMLResponse::fromGET('logout')) {
             session_destroy();
             HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
         }
 
+        TwitterAuth::isLogged();
 
+        if (TwitterAuth::isBot()) {
+            if (HTMLResponse::fromGET('authenticatebot')) {
+                HTMLResponse::exitWithRoute(TwitterAuth::getBotAuthorizeURL(HTMLResponse::getRoute()));
+            }
+            TwitterAuth::doBotLogin();
+        }
 
         $this->topMenu = array();
 
@@ -61,6 +69,14 @@ class PublicDesign extends HTMLResponse
         $this->addToTopMenu('/normas/', 'Normas', '/normas/');
         $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
 
+        if (Team::isMember()) {
+            $this->addToTopMenu('/votaciones/', 'Votaciones', '/votaciones/.*');
+        }
+
+        if (Team::isAdmin()) {
+            $this->addToTopMenu('/comunicados/', 'Comunicados', '/comunicados/.*');
+        }
+
         $this->addJavaScript('/lce.js', true);
     }
 
@@ -90,6 +106,17 @@ class PublicDesign extends HTMLResponse
                     ?></div>
                 <? if (TwitterAuth::isLogged()) { ?>
                     Estás como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
+                    <?
+                    if (TwitterAuth::isBot()) {
+                        $botConfig = TwitterAuth::getBotConfig();
+                        ?>
+                        <br>Eres la cuenta oficial de la LCE, haz <a href="/?authenticatebot=1">click aquí</a> para autorizar esta web a usarte como un bot.<br>
+                        <b>Última autorización:</b> <?= isset($botConfig['dateline'])
+                            ? date('Y/m/d H:i:s', $botConfig['dateline'])
+                            : 'Nunca' ?>
+                        <?
+                    }
+                    ?>
                 <? } ?>
 
                 <div class="title">

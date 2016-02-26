@@ -50,6 +50,7 @@ class Match extends Model
         $delay = 0;
         if ($week >= 9) $delay += 2;
         if ($week >= 12) $delay += 1;
+        if ($week >= 13) $delay += 1;
         return mktime(17, 00, 00, 11, 1 + 7 * ($week-1+$delay), 2015);
     }
 
@@ -98,9 +99,9 @@ class Match extends Model
     }
 
     static function getPlayoffsWeek($week) {
-        $playersCount = Team::getCount();
-        if ($week >= $playersCount) {
-            return $week - $playersCount + 1;
+        // $playersCount = Team::getCount();
+        if ($week >= 12) {
+            return $week - 12 + 1;
         }
         else {
             return 0;
