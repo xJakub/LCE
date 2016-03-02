@@ -47,7 +47,11 @@ $router->addRoute("/normas/", array('Rules'));
 $router->addRoute("/votaciones/", array('Polls'));
 $router->addRoute("/votaciones/crear/", array('AddPoll'));
 $router->addRoute("/votaciones/{$rNum}/", array('ViewPoll'));
-$router->addRoute("/comunicados/", array('Notices'));
+
+$router->addRoute("/admin/", array('Admin_Index'));
+$router->addRoute("/admin/comunicados/", array('Admin_Notices'));
+$router->addRoute("/admin/equipos/", array('Admin_Teams'));
+$router->addRoute("/admin/equipos/{$rNum}/", array('Admin_Team'));
 
 
 $router->addRoute(".*", array('Error_404'));

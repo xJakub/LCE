@@ -17,6 +17,7 @@ class Team_Index implements PublicSection
     public function __construct($dir) {
         $this->team = Team::fromLink($dir);
         if (!$this->team) HTMLResponse::exitWithRoute('/equipos/');
+        if (!$this->team->ispublic && !Team::isSuperAdmin()) HTMLResponse::exitWithRoute('/equipos/');
 
         $this->tiers = ['OverUsed','OverUsed','OverUsed',
             'UnderUsed','UnderUsed','UnderUsed',

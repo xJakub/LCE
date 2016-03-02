@@ -53,6 +53,7 @@ class Team extends Model {
 
         if (strtolower($username) == 'xjakub') return true;
         if (strtolower($username) == 'senixirabix') return true;
+        if (strtolower($username) == 'pkmnraion') return true;
     }
 
     static function isAdmin($username = null) {
@@ -76,12 +77,24 @@ class Team extends Model {
         return !!Team::findOne('lower(username) = ? and ismember', [strtolower($username)]);
     }
 
+    function clearImageCache() {
+        $files = glob('img/thumbnails/'.$this->getLink().'-*x*.png');
+        foreach($files as $file) {
+            unlink($file);
+        }
+    }
+
     function getImageLink($width = null, $height = null) {
         $originalLink = 'img/'.$this->getLink().'.png';
+
         if (!$width && !$height) {
             return $originalLink;
         }
         else if ($width && $height) {
+            if (!file_exists($originalLink)) {
+                return "img/blank.png";
+            }
+
             @mkdir('img/thumbnails');
             $link = 'img/thumbnails/'.$this->getLink()."-{$width}x{$height}.png";
             if (!file_exists($link)) {

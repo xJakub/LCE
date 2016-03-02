@@ -73,8 +73,9 @@ class PublicDesign extends HTMLResponse
             $this->addToTopMenu('/votaciones/', 'Votaciones', '/votaciones/.*');
         }
 
-        if (Team::isAdmin()) {
-            $this->addToTopMenu('/comunicados/', 'Comunicados', '/comunicados/.*');
+        if (Team::isSuperAdmin()) {
+            $this->addToTopMenu('/admin/', 'Admin', '/admin/.*');
+            // $this->addToTopMenu('/comunicados/', 'Comunicados', '/comunicados/.*');
         }
 
         $this->addJavaScript('/lce.js', true);

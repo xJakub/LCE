@@ -15,7 +15,7 @@ abstract class Model implements JsonSerializable {
     private $_oldValues;
     private $_canSave;
 
-    function __construct($data) {
+    function __construct($data, $modified = false) {
         foreach($this as $key=>$value) {
             if ($key[0] != '_') {
                 $this->_oldValues[$key] = $value;
@@ -37,7 +37,7 @@ abstract class Model implements JsonSerializable {
         $class = get_called_class();
         $key = self::$keys[$class];
 
-        return new $class(array($key => null));
+        return new $class(array($key => null), true);
     }
 
     function disableSave() {
@@ -108,8 +108,14 @@ abstract class Model implements JsonSerializable {
 
 
     function save() {
+        $modified = false;
+        foreach($this->_oldValues as $key => $value) {
+            if ($value !== $this->$key) {
+                $modified = true;
+            }
+        }
 
-        if (!$this->_canSave) return;
+        if (!$this->_canSave || !$modified) return;
 
         $class = get_called_class();
         $table = self::$tables[$class];

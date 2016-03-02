@@ -6,7 +6,7 @@
  * Date: 18/02/2016
  * Time: 21:17
  */
-class Notices implements PublicSection
+class Admin_Notices implements PublicSection
 {
 
     public function setDesign(PublicDesign $response)
@@ -35,7 +35,7 @@ class Notices implements PublicSection
      */
     public function show()
     {
-        if (!Team::isAdmin() || strtolower(TwitterAuth::getUserName())!='senixirabix') {
+        if (!Team::isSuperAdmin()) {
             HTMLResponse::exitWithRoute('/');
         }
         if (!TwitterAuth::getBotConfig()) {
