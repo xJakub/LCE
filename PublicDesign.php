@@ -67,7 +67,10 @@ class PublicDesign extends HTMLResponse
         $this->addToTopMenu('/quiniela/', 'Quiniela', '/quiniela/');
 
         $this->addToTopMenu('/normas/', 'Normas', '/normas/');
-        // $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
+
+        if (Team::isAdmin()) {
+            $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
+        }
 
         if (Team::isMember()) {
             $this->addToTopMenu('/votaciones/', 'Votaciones', '/votaciones/.*');
