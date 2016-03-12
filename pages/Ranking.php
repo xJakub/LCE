@@ -8,10 +8,13 @@
  */
 class Ranking implements PublicSection
 {
+    public function __construct($seasonLink) {
+        $this->season = Season::getByLink($seasonLink);
+    }
 
     public function setDesign(PublicDesign $response)
     {
-        // TODO: Implement setDesign() method.
+        $response->setSeason($this->season);
     }
 
     /**
@@ -35,7 +38,7 @@ class Ranking implements PublicSection
      */
     public function show()
     {
-        $matches = Match::find('1=1');
+        $matches = Match::find('seasonid = ?', [$this->season->seasonid]);
         $wins = [];
         $games = [];
         $kills = [];
@@ -100,7 +103,7 @@ class Ranking implements PublicSection
                         <div class="teamimg64">
                             <img src="/<?=$team->getImageLink(64, 64)?>">
                         </div>
-                        <a href="/equipos/<?=$team->getLink()?>/" class="inblock" style="vertical-align:middle">
+                        <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/" class="inblock" style="vertical-align:middle">
                             <?= $team->name ?>
                     </a></td>
                     <td><?= $games[$teamid] ?></td>

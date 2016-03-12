@@ -8,10 +8,13 @@
  */
 class Teams implements PublicSection {
 
+    public function __construct($seasonLink) {
+        $this->season = Season::getByLink($seasonLink);
+    }
 
     public function setDesign(PublicDesign $response)
     {
-        // TODO: Implement setDesign() method.
+        $response->setSeason($this->season);
     }
 
     /**
@@ -35,11 +38,11 @@ class Teams implements PublicSection {
      */
     public function show()
     {
-        foreach(Team::find('ispublic order by teamid asc') as $team) {
+        foreach($this->season->getTeams() as $team) {
             ?>
             <div class="teambox">
-                <a class="login" href="/equipos/<?=$team->getLink()?>/"><?=htmlentities($team->name)?></a>
-                <a href="/equipos/<?=$team->getLink()?>/"><img src="/<?=$team->getImageLink(200, 150)?>"></a>
+                <a class="login" href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><?=htmlentities($team->name)?></a>
+                <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><img src="/<?=$team->getImageLink(200, 150)?>"></a>
             </div>
             <?
         }

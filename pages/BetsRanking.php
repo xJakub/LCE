@@ -8,10 +8,13 @@
  */
 class BetsRanking implements PublicSection
 {
+    public function __construct($seasonLink) {
+        $this->season = Season::getByLink($seasonLink);
+    }
 
     public function setDesign(PublicDesign $response)
     {
-        // TODO: Implement setDesign() method.
+        $response->setSeason($this->season);
     }
 
     /**
@@ -35,7 +38,7 @@ class BetsRanking implements PublicSection
      */
     public function show()
     {
-        $matches = Match::find('result != 0');
+        $matches = Match::find('seasonid = ? and result != 0', [$this->season->seasonid]);
         $matches = Model::indexBy($matches, 'matchid');
 
         $teams = Model::indexBy(Team::find('1=1'), 'teamid');

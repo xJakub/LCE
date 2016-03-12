@@ -14,10 +14,13 @@ class Team_Index implements PublicSection
      */
     private $design;
 
-    public function __construct($dir) {
+    public function __construct($seasonLink, $dir) {
+        $this->season = Season::getByLink($seasonLink);
+
         $this->team = Team::fromLink($dir);
-        if (!$this->team) HTMLResponse::exitWithRoute('/equipos/');
-        if (!$this->team->ispublic && !Team::isSuperAdmin()) HTMLResponse::exitWithRoute('/equipos/');
+
+        if (!$this->team) HTMLResponse::exitWithRoute("/$seasonLink/equipos/");
+        if (!$this->team->ispublic && !Team::isSuperAdmin()) HTMLResponse::exitWithRoute("/$seasonLink/equipos/");
 
         $this->tiers = ['OverUsed','OverUsed','OverUsed',
             'UnderUsed','UnderUsed','UnderUsed',
@@ -28,6 +31,7 @@ class Team_Index implements PublicSection
     public function setDesign(PublicDesign $response)
     {
         $this->design = $response;
+        $this->design->setSeason($this->season);
     }
 
     /**
@@ -129,7 +133,7 @@ class Team_Index implements PublicSection
                             <?=htmlentities($this->team->name)?>
                             VS
                             -->
-                            <a href="/equipos/<?=$opponents->getLink()?>/">
+                            <a href="/<?=$this->season->getLink()?>/equipos/<?=$opponents->getLink()?>/">
                                 <?=htmlentities($opponents->name)?>
                             </a>
                         </td>

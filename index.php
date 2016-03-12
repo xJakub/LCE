@@ -34,13 +34,6 @@ $rIdExtra = "{$rId}{$rExtra}";
 $rNumExtra = "{$rNum}{$rExtra}";
 
 
-$router->addRoute("/", array('Index'));
-$router->addRoute("/jornadas/{$rNum}/", array('Index'));
-$router->addRoute("/batch/", array('Batch'));
-$router->addRoute("/equipos/", array('Teams'));
-$router->addRoute("/equipos/{$rDir}/", array('Team_Index'));
-$router->addRoute("/clasificacion/", array('Ranking'));
-$router->addRoute("/quiniela/", array('BetsRanking'));
 
 if (Team::isAdmin()) {
     $router->addRoute("/unete/", array('JoinUs'));
@@ -55,7 +48,17 @@ $router->addRoute("/admin/", array('Admin_Index'));
 $router->addRoute("/admin/comunicados/", array('Admin_Notices'));
 $router->addRoute("/admin/equipos/", array('Admin_Teams'));
 $router->addRoute("/admin/equipos/{$rNum}/", array('Admin_Team'));
+$router->addRoute("/admin/temporadas/", array('Admin_Seasons'));
+$router->addRoute("/admin/temporadas/{$rNum}/", array('Admin_Season'));
 
+$router->addRoute("/", array('Index'));
+$router->addRoute("/batch/", array('Batch'));
+$router->addRoute("/{$rDir}/jornadas/{$rNum}/", array('Season_Index'));
+$router->addRoute("/{$rDir}/equipos/", array('Teams'));
+$router->addRoute("/{$rDir}/equipos/{$rDir}/", array('Team_Index'));
+$router->addRoute("/{$rDir}/clasificacion/", array('Ranking'));
+$router->addRoute("/{$rDir}/quiniela/", array('BetsRanking'));
+$router->addRoute("/{$rDir}/", array('Season_Index'));
 
 $router->addRoute(".*", array('Error_404'));
 

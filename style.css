@@ -146,19 +146,21 @@ a:hover {
 }
 
 
-#topmenu a, .nav a, .nav-bottom a {
+#topmenu a, .nav a, .nav-bottom a, .nav div {
     display: inline-block;
     color: #333;
     text-decoration: none;
     padding: 6px 25px;
     margin-right: 1px;
-
 }
 #topmenu a:hover, a.selected, .nav a:hover, .nav a.selected, .nav-bottom a:hover, .nav-bottom a.selected {
     background: #ddd;
     color: #000;
 }
 
+.nav select {
+    border: 0;
+}
 
 .nav {
     border-bottom: 1px solid #ccc;

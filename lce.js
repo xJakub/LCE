@@ -32,7 +32,11 @@ $(function() {
         var number = $(this).val();
         $('.playerEdit').hide();
         $('.playerEdit.player'+number).show();
-    })
+    });
+
+    $('#navSeason').change(function() {
+       location.href = '/' + $(this).val() + '/';
+    });
 });
 
 function showApplicationVote(obj) {

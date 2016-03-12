@@ -58,13 +58,19 @@ class PublicDesign extends HTMLResponse
             })
         ", false);
 
+        $this->season = null;
         $section->setDesign($this);
         $this->section = $section;
 
-        $this->addToTopMenu('/', 'Enfrentamientos', '/');
-        $this->addToTopMenu('/equipos/', 'Equipos', '/equipos/.*');
-        $this->addToTopMenu('/clasificacion/', 'Clasificación', '/clasificacion/');
-        $this->addToTopMenu('/quiniela/', 'Quiniela', '/quiniela/');
+        if ($this->season == null) {
+            $this->season = Season::findOne('ispublic order by isdefault desc');
+        }
+        $seasonLink = $this->season->getLink();
+
+        $this->addToTopMenu("/{$seasonLink}/", 'Enfrentamientos', '/');
+        $this->addToTopMenu("/{$seasonLink}/equipos/", 'Equipos', '/equipos/.*');
+        $this->addToTopMenu("/{$seasonLink}/clasificacion/", 'Clasificación', '/clasificacion/');
+        $this->addToTopMenu("/{$seasonLink}/quiniela/", 'Quiniela', '/quiniela/');
 
         $this->addToTopMenu('/normas/', 'Normas', '/normas/');
 
@@ -73,7 +79,7 @@ class PublicDesign extends HTMLResponse
         }
 
         if (Team::isMember()) {
-            $this->addToTopMenu('/votaciones/', 'Votaciones', '/votaciones/.*');
+            // $this->addToTopMenu('/votaciones/', 'Votaciones', '/votaciones/.*');
         }
 
         if (Team::isSuperAdmin()) {
@@ -90,6 +96,9 @@ class PublicDesign extends HTMLResponse
         $this->topMenu[] = array($link, $label, $re);
     }
 
+    public function setSeason(Season $season) {
+        $this->season = $season;
+    }
 
     public function showBody()
     {
@@ -106,10 +115,25 @@ class PublicDesign extends HTMLResponse
                         }
 
                         ?><a href="<?= $link ?>" class="<?= $status ?>"><?= $label ?></a><? }
-
-                    ?></div>
+                    ?>
+                    <div style="float: right">
+                        <select name="season" id="navSeason">
+                            <?
+                            $seasons = Team::isSuperAdmin() ?
+                                Season::find('1=1') :
+                                Season::find('ispublic');
+                            foreach($seasons as $season) {
+                                $selected = $season->seasonid == $this->season->seasonid ? 'selected' : '';
+                                ?>
+                                <option value="<?=$season->getLink()?>" <?=$selected?>>
+                                    <?=htmlentities($season->name)?>
+                                </option>
+                            <? } ?>
+                        </select>
+                    </div>
+                </div>
                 <? if (TwitterAuth::isLogged()) { ?>
-                    Estás como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
+                    Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
                     <?
                     if (TwitterAuth::isBot()) {
                         $botConfig = TwitterAuth::getBotConfig();
@@ -121,6 +145,8 @@ class PublicDesign extends HTMLResponse
                         <?
                     }
                     ?>
+                <? } else { ?>
+                    No estás identificado. <a href="<?=HTMLResponse::getRoute()?>?authenticate=1">Iniciar sesión</a><br>
                 <? } ?>
 
                 <div class="title">
