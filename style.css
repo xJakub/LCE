@@ -303,3 +303,9 @@ h2 {
     font-weight: bold;
     border: 1px solid black;
 }
+
+.banner {
+    display: none;
+    background: url(/img/banner.jpg);
+    height: 200px;
+}

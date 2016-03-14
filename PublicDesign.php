@@ -105,6 +105,7 @@ class PublicDesign extends HTMLResponse
         ?>
         <div id="main" class="public">
             <div class="content">
+                <div class="banner"></div>
                 <div class="nav" style="text-align: left">
                     <?
                     foreach ($this->topMenu as $arr) {
@@ -132,22 +133,24 @@ class PublicDesign extends HTMLResponse
                         </select>
                     </div>
                 </div>
-                <? if (TwitterAuth::isLogged()) { ?>
-                    Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
-                    <?
-                    if (TwitterAuth::isBot()) {
-                        $botConfig = TwitterAuth::getBotConfig();
-                        ?>
-                        <br>Eres la cuenta oficial de la LCE, haz <a href="/?authenticatebot=1">click aquí</a> para autorizar esta web a usarte como un bot.<br>
-                        <b>Última autorización:</b> <?= isset($botConfig['dateline'])
-                            ? date('Y/m/d H:i:s', $botConfig['dateline'])
-                            : 'Nunca' ?>
+                <div style="padding: 6px">
+                    <? if (TwitterAuth::isLogged()) { ?>
+                        Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
                         <?
-                    }
-                    ?>
-                <? } else { ?>
-                    No estás identificado. <a href="<?=HTMLResponse::getRoute()?>?authenticate=1">Iniciar sesión</a><br>
-                <? } ?>
+                        if (TwitterAuth::isBot()) {
+                            $botConfig = TwitterAuth::getBotConfig();
+                            ?>
+                            <br>Eres la cuenta oficial de la LCE, haz <a href="/?authenticatebot=1">click aquí</a> para autorizar esta web a usarte como un bot.<br>
+                            <b>Última autorización:</b> <?= isset($botConfig['dateline'])
+                                ? date('Y/m/d H:i:s', $botConfig['dateline'])
+                                : 'Nunca' ?>
+                            <?
+                        }
+                        ?>
+                    <? } else { ?>
+                        No estás identificado. <a href="<?=HTMLResponse::getRoute()?>?authenticate=1">Iniciar sesión</a><br>
+                    <? } ?>
+                </div>
 
                 <div class="title">
                     <?= $this->section->getSubtitle() ?>
