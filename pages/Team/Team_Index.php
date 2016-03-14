@@ -314,14 +314,20 @@ class Team_Index implements PublicSection
             for ($x=0; $x<3; $x++) {
                 $number = $y*3 + $x + 1;
                 $player = $playersByNumber[$number];
+                $playerLink = preg_replace("'\\-[0-9]$'", "", $player->name);
+                $infoLink = "http://www.smogon.com/dex/xy/pokemon/{$playerLink}/";
                 ?>
                 <td>
                     <div style="width: 144px">
                         <? if ($player) { ?>
                             <div class="inblock middle" style="text-align: center">
-                                <img src="/img/sprites/<?= $player->name ?>.png">
+                                <a href="<?=$infoLink?>" target="_blank" title="Ver en Smogon">
+                                    <img src="/img/sprites/<?= $player->name ?>.png">
+                                </a>
                             </div><br>
-                            <b><?= ucwords($player->name) ?></b>
+                            <a href="<?=$infoLink?>" target="_blank" title="Ver en Smogon">
+                                <b><?= ucwords($player->name) ?></b>
+                            </a>
                         <? } else { ?>
                             <div class="inblock middle" style="text-align: center">
                                 <div style="width:100px; height:100px"
