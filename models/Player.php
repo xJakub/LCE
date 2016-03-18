@@ -12,6 +12,7 @@ class Player extends Model
     public $teamid;
     public $number;
     public $name;
+    public $seasonid;
 
     public static function getAvailable()
     {

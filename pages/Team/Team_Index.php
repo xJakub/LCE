@@ -98,8 +98,8 @@ class Team_Index implements PublicSection
                 </tr>
                 </thead>
                 <tbody>
-                <? foreach(Match::find('team1id = ? or team2id = ? order by week asc',
-                    [$this->team->teamid, $this->team->teamid]) as $match) {
+                <? foreach(Match::find('(team1id = ? or team2id = ?) and seasonid = ? order by week asc',
+                    [$this->team->teamid, $this->team->teamid, $this->season->seasonid]) as $match) {
 
                     if (HTMLResponse::fromPOST('matchid', '') === $match->matchid &&
                         strlen($newResult = HTMLResponse::fromPOST('result', ''))) {
@@ -262,7 +262,8 @@ class Team_Index implements PublicSection
         <div class="inblock" style="display: inline-block; text-align: left">
         <?
         for ($i=1; $i<=count($this->tiers); $i++) {
-            $player = Player::findOne('teamid = ? and number = ?', [$this->team->teamid, $i]);
+            $player = Player::findOne('teamid = ? and number = ? and seasonid = ?',
+                [$this->team->teamid, $i, $this->season->seasonid]);
             $pname = $player ? $player->name : '';
             ?>
             <form method="post" class="playerEdit player<?=$i?>" action="<?=HTMLResponse::getRoute()?>">
@@ -295,7 +296,8 @@ class Team_Index implements PublicSection
 
     private function showPlayers()
     {
-        $players = Player::find('teamid = ? and name != ? order by number asc', [$this->team->teamid, '']);
+        $players = Player::find('teamid = ? and name != ? and seasonid = ? order by number asc',
+            [$this->team->teamid, '', $this->season->seasonid]);
         if (!$players) return;
 
         $playersByNumber = Model::indexBy($players, 'number');
@@ -350,11 +352,13 @@ class Team_Index implements PublicSection
 
         if ($number >= 1 && $number <= count($this->tiers)) {
             if ($name == '' || in_array($name, Player::getAvailable())) {
-                $player = Player::findOne('teamid = ? and number = ?', [$this->team->teamid, $number]);
+                $player = Player::findOne('teamid = ? and number = ? and seasonid = ?',
+                    [$this->team->teamid, $number, $this->season->seasonid]);
                 if (!$player) {
                     $player = Player::create();
                     $player->number = $number;
                     $player->teamid = $this->team->teamid;
+                    $player->seasonid = $this->season->seasonid;
                 }
                 $player->name = $name;
                 $player->save();
