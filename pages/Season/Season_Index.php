@@ -8,26 +8,21 @@
  */
 class Season_Index implements PublicSection {
 
-    // public $week = 3;
-    // public $canVote = true;
-
     public function __construct($seasonId, $requestedWeek = null) {
 
         $this->season = Season::getByLink($seasonId);
-        $this->maxWeek = 1;
+        $this->week = 1;
         $time = time();
 
-        while($this->maxWeek < $this->season->getWeeksCount()
-            && $this->season->weekIsPublished($this->maxWeek)) {
-            $this->maxWeek++;
+        while($this->week < $this->season->getWeeksCount()
+            && $this->season->weekIsPublished($this->week)) {
+            $this->week++;
         }
 
         $maxWeekMatch = Match::findOne('seasonid = ? order by week desc limit 1', [$this->season->seasonid]);
-        $this->maxWeek = min($this->maxWeek, $maxWeekMatch->week);
+        $this->maxWeek = $maxWeekMatch->week;
 
-        $this->week = $this->maxWeek;
-
-        if ($requestedWeek && $requestedWeek <= $this->week) {
+        if ($requestedWeek && $requestedWeek <= $this->maxWeek) {
             $this->week = $requestedWeek;
         }
         else if ($requestedWeek) {
