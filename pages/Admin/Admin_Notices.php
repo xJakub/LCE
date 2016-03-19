@@ -71,7 +71,7 @@ class Admin_Notices implements PublicSection
             }
         }
 
-        if (!$csrf = $_SESSION['csrf']) {
+        if (!($csrf = $_SESSION['csrf'])) {
             $_SESSION['csrf'] = $csrf = rand(1, 1000000);
         }
 

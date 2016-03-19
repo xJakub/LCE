@@ -45,8 +45,8 @@ class Ranking implements PublicSection
         $deaths = [];
 
         foreach($matches as $match) {
-            if (!$match->isPublished()) continue;
-            if (Match::getPlayoffsWeek($match->week)) continue;
+            if ($match->week > $this->season->mainweeks) continue;
+            if (!$this->season->weekIsPublished($match->week)) continue;
 
             $winner = $match->getWinner();
             if (!$winner) continue;

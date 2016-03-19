@@ -146,9 +146,12 @@ class Batch implements PublicSection
      */
     public function show()
     {
+        // we won't need this anymore
+        /*
         $this->saveResults();
         $this->makeTeams();
         $this->makeMatches();
         $this->restoreResults();
+        */
     }
 }

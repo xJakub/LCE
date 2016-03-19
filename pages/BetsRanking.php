@@ -46,7 +46,7 @@ class BetsRanking implements PublicSection
         $matchWinner = [];
 
         foreach($matches as $match) {
-            if ($match->isPublished()) {
+            if ($this->season->weekIsPublished($match->week)) {
                 $matchWinner[$match->matchid] = $match->getWinner();
             }
         }

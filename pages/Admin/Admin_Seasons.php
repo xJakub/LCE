@@ -39,7 +39,7 @@ class Admin_Seasons implements PublicSection
             HTMLResponse::exitWithRoute('/');
         }
 
-        if (!$csrf = $_SESSION['csrf']) {
+        if (!($csrf = $_SESSION['csrf'])) {
             $_SESSION['csrf'] = $csrf = rand(1, 1000000);
         }
         $postCsrf = HTMLResponse::fromPOST('csrf', '');
@@ -75,7 +75,10 @@ class Admin_Seasons implements PublicSection
                     </td>
                     <td>
                         <a href="/admin/temporadas/<?=$season->seasonid?>/">
-                            Editar
+                            Editar temporada
+                        </a><br>
+                        <a href="/admin/temporadas/<?=$season->seasonid?>/jornadas/">
+                            Editar jornadas
                         </a>
                     </td>
                 </tr>

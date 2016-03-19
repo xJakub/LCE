@@ -59,6 +59,10 @@ class PublicDesign extends HTMLResponse
         ", false);
 
         $this->season = null;
+        if ($_SESSION['seasonid']) {
+            $this->season = Season::get($_SESSION['seasonid']);
+        }
+
         $section->setDesign($this);
         $this->section = $section;
 
@@ -98,6 +102,7 @@ class PublicDesign extends HTMLResponse
 
     public function setSeason(Season $season) {
         $this->season = $season;
+        $_SESSION['seasonid'] = $season->seasonid;
     }
 
     public function showBody()

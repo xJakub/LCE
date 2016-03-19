@@ -20,7 +20,9 @@ class Team_Index implements PublicSection
         $this->team = Team::fromLink($dir);
 
         if (!$this->team) HTMLResponse::exitWithRoute("/$seasonLink/equipos/");
-        if (!$this->team->ispublic && !Team::isSuperAdmin()) HTMLResponse::exitWithRoute("/$seasonLink/equipos/");
+        if (!Team::isSuperAdmin()
+            && !SeasonTeam::findOne('seasonid = ? and teamid = ? and ispublic', [$this->season->seasonid, $this->team->teamid])
+        ) HTMLResponse::exitWithRoute("/$seasonLink/equipos/");
 
         $this->tiers = ['OverUsed','OverUsed','OverUsed',
             'UnderUsed','UnderUsed','UnderUsed',
@@ -108,7 +110,7 @@ class Team_Index implements PublicSection
                         HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
                     }
 
-                    $date = $match->getPublishDate();
+                    $date = $this->season->getPublishDateForWeek($match->week);
 
                     if ($match->team1id == $this->team->teamid) {
                         $posIndex = 0;
@@ -124,7 +126,7 @@ class Team_Index implements PublicSection
                     <tr>
                         <td style="height:3em">
                             <?
-                            echo Match::getWeekName($match->week);
+                            echo $this->season->getWeekName($match->week);
                             ?>
                         </td>
                         <td><?= date("Y-m-d", $date) ?></td>

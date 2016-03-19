@@ -39,7 +39,7 @@ class Admin_Teams implements PublicSection
             HTMLResponse::exitWithRoute('/');
         }
 
-        if (!$csrf = $_SESSION['csrf']) {
+        if (!($csrf = $_SESSION['csrf'])) {
             $_SESSION['csrf'] = $csrf = rand(1, 1000000);
         }
         $postCsrf = HTMLResponse::fromPOST('csrf', '');

@@ -13,6 +13,7 @@ class Match extends Model
     public $team2id;
     public $week;
     public $result;
+    public $seasonid;
 
     /**
      * @return Team
@@ -46,20 +47,9 @@ class Match extends Model
         else return $bet->teamid;
     }
 
-    static function getPublishDateForWeek($week) {
-        $delay = 0;
-        if ($week >= 9) $delay += 2;
-        if ($week >= 12) $delay += 1;
-        if ($week >= 13) $delay += 1;
-        return mktime(17, 00, 00, 11, 1 + 7 * ($week-1+$delay), 2015);
-    }
-
-    function getPublishDate() {
-        return self::getPublishDateForWeek($this->week);
-    }
-
     function isPublished() {
-        return (time() >= $this->getPublishDate());
+        $season = Season::get($this->seasonid);
+        return $season->weekIsPublished($this->week);
     }
 
     function getWinner() {
@@ -95,29 +85,6 @@ class Match extends Model
         }
         else {
             return null;
-        }
-    }
-
-    static function getPlayoffsWeek($week) {
-        // $playersCount = Team::getCount();
-        if ($week >= 12) {
-            return $week - 12 + 1;
-        }
-        else {
-            return 0;
-        }
-    }
-
-    static function getWeekName($week) {
-        $playoffsWeek = Match::getPlayoffsWeek($week);
-        $playoffsNames = [null, "Semifinales", "Final"];
-
-        if ($playoffsWeek) {
-            return $playoffsNames[$playoffsWeek-1]
-                ? $playoffsNames[$playoffsWeek-1] : "Playoffs {$playoffsWeek}";
-        }
-        else {
-            return "Jornada {$week}";
         }
     }
 }

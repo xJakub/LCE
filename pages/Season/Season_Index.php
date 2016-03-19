@@ -17,7 +17,8 @@ class Season_Index implements PublicSection {
         $this->maxWeek = 1;
         $time = time();
 
-        while($time >= Match::getPublishDateForWeek($this->maxWeek)) {
+        while($this->maxWeek < $this->season->getWeeksCount()
+            && $this->season->weekIsPublished($this->maxWeek)) {
             $this->maxWeek++;
         }
 
@@ -26,14 +27,14 @@ class Season_Index implements PublicSection {
 
         $this->week = $this->maxWeek;
 
-        if ($requestedWeek && $requestedWeek < $this->week) {
+        if ($requestedWeek && $requestedWeek <= $this->week) {
             $this->week = $requestedWeek;
         }
         else if ($requestedWeek) {
             HTMLResponse::exitWithRoute("/");
         }
 
-        $this->canVote = (Match::getPublishDateForWeek($this->week) - $time > 3600);
+        $this->canVote = ($this->season->getPublishDateForWeek($this->week) - $time > 3600);
     }
 
     public function setDesign(PublicDesign $response)
@@ -55,17 +56,13 @@ class Season_Index implements PublicSection {
     public function getSubtitle()
     {
 
-        $matches = Match::find('week = ? order by matchid asc', [$this->week]);
+        $matches = Match::find('seasonid = ? and week = ? order by matchid asc', [$this->season->seasonid, $this->week]);
 
         if (!$matches) {
             return $this->season->name;
         }
 
-        $playoffsWeek = Match::getPlayoffsWeek($this->week);
-        if ($playoffsWeek) {
-            return "Enfrentamientos de ".strtolower(Match::getWeekName($this->week));
-        }
-        return "Enfrentamientos de la jornada {$this->week}";
+        return "Enfrentamientos de ".strtolower($this->season->getWeekName($this->week));
     }
 
     /**
@@ -84,14 +81,14 @@ class Season_Index implements PublicSection {
                     ?>
                     <a style="float:left; margin-left: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week-1?>/">
                         &lt;&lt;
-                        Ver <?= strtolower(Match::getWeekName($this->week-1)) ?>
+                        Ver <?= strtolower($this->season->getWeekName($this->week-1)) ?>
                     </a>
                     <?
                 }
                 if ($this->week < $this->maxWeek) {
                     ?>
                     <a style="float:right; margin-right: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week+1?>/">
-                        Ver <?= strtolower(Match::getWeekName($this->week+1)) ?>
+                        Ver <?= strtolower($this->season->getWeekName($this->week+1)) ?>
                         &gt;&gt;
                     </a>
                     <?
@@ -101,7 +98,7 @@ class Season_Index implements PublicSection {
             <?
         }
 
-        $matches = Match::find('week = ? order by matchid asc', [$week]);
+        $matches = Match::find('seasonid = ? and week = ? order by matchid asc', [$this->season->seasonid, $week]);
         #shuffle($matches);
 
         if (!$matches) {
