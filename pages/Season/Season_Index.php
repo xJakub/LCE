@@ -68,30 +68,41 @@ class Season_Index implements PublicSection {
         $week = $this->week;
         $canVote = $this->canVote;
 
-        if ($this->maxWeek != 1) {
+        $publishTime = $this->season->getPublishDateForWeek($week);
+
+        if ($publishTime >= 1000) {
+
+            $days = explode(',', 'Domingo,Lunes,Martes,Miércoles,Jueves,Viernes,Sábado');
+            $months = explode(',', 'enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre')
+
             ?>
-            <div style="overflow: hidden">
-                <?
-                if ($this->week > 1) {
-                    ?>
-                    <a style="float:left; margin-left: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week-1?>/">
-                        &lt;&lt;
-                        Ver <?= strtolower($this->season->getWeekName($this->week-1)) ?>
-                    </a>
-                    <?
-                }
-                if ($this->week < $this->maxWeek) {
-                    ?>
-                    <a style="float:right; margin-right: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week+1?>/">
-                        Ver <?= strtolower($this->season->getWeekName($this->week+1)) ?>
-                        &gt;&gt;
-                    </a>
-                    <?
-                }
-                ?>
+            <div>
+                <?= $days[date('w', $publishTime)] ?>
+                <?= date('j', $publishTime)?> de <?= $months[date('m', $publishTime)-1] ?> de <?= date('Y', $publishTime) ?>,
+                <?= date('H:i', $publishTime) ?> (hora española)
             </div>
+        <? } ?>
+        <div style="overflow: hidden">
             <?
-        }
+            if ($this->week > 1) {
+                ?>
+                <a style="float:left; margin-left: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week-1?>/">
+                    &lt;&lt;
+                    Ver <?= strtolower($this->season->getWeekName($this->week-1)) ?>
+                </a>
+                <?
+            }
+            if ($this->week < $this->maxWeek) {
+                ?>
+                <a style="float:right; margin-right: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week+1?>/">
+                    Ver <?= strtolower($this->season->getWeekName($this->week+1)) ?>
+                    &gt;&gt;
+                </a>
+                <?
+            }
+            ?>
+        </div>
+        <?
 
         $matches = Match::find('seasonid = ? and week = ? order by matchid asc', [$this->season->seasonid, $week]);
         #shuffle($matches);
