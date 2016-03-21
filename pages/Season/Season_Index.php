@@ -29,7 +29,7 @@ class Season_Index implements PublicSection {
             HTMLResponse::exitWithRoute("/");
         }
 
-        $this->canVote = ($this->season->getPublishDateForWeek($this->week) - $time > 3600);
+        $this->canVote = ($this->season->getPublishTimeForWeek($this->week) - $time > 3600);
     }
 
     public function setDesign(PublicDesign $response)
@@ -68,7 +68,7 @@ class Season_Index implements PublicSection {
         $week = $this->week;
         $canVote = $this->canVote;
 
-        $publishTime = $this->season->getPublishDateForWeek($week);
+        $publishTime = $this->season->getPublishTimeForWeek($week);
 
         if ($publishTime >= 1000) {
 

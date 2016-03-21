@@ -59,6 +59,7 @@ $router->addRoute("/{$rDir}/equipos/", array('Teams'));
 $router->addRoute("/{$rDir}/equipos/{$rDir}/", array('Team_Index'));
 $router->addRoute("/{$rDir}/clasificacion/", array('Ranking'));
 $router->addRoute("/{$rDir}/quiniela/", array('BetsRanking'));
+$router->addRoute("/{$rDir}/calendario/", array('Calendar'));
 $router->addRoute("/{$rDir}/", array('Season_Index'));
 
 $router->addRoute(".*", array('Error_404'));

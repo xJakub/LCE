@@ -73,6 +73,7 @@ class PublicDesign extends HTMLResponse
 
         $this->addToTopMenu("/{$seasonLink}/", 'Enfrentamientos', '/');
         $this->addToTopMenu("/{$seasonLink}/equipos/", 'Equipos', '/equipos/.*');
+        $this->addToTopMenu("/{$seasonLink}/calendario/", 'Calendario', '/calendario/');
         $this->addToTopMenu("/{$seasonLink}/clasificacion/", 'Clasificación', '/clasificacion/');
         $this->addToTopMenu("/{$seasonLink}/quiniela/", 'Quiniela', '/quiniela/');
 
@@ -82,14 +83,16 @@ class PublicDesign extends HTMLResponse
             $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
         }
 
+        /*
         if (Team::isMember()) {
             // $this->addToTopMenu('/votaciones/', 'Votaciones', '/votaciones/.*');
         }
 
         if (Team::isSuperAdmin()) {
-            $this->addToTopMenu('/admin/', 'Admin', '/admin/.*');
+            // $this->addToTopMenu('/admin/', 'Admin', '/admin/.*');
             // $this->addToTopMenu('/comunicados/', 'Comunicados', '/comunicados/.*');
         }
+        */
 
         $this->addJavaScript('/lce.js', true);
     }
@@ -140,7 +143,11 @@ class PublicDesign extends HTMLResponse
                 </div>
                 <div style="padding: 6px">
                     <? if (TwitterAuth::isLogged()) { ?>
-                        Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a><br>
+                        Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a>
+                        <? if (Team::isSuperAdmin()) {
+                            ?>/ <a href="/admin/">Panel de admin</a><?
+                        } ?>
+                        <br>
                         <?
                         if (TwitterAuth::isBot()) {
                             $botConfig = TwitterAuth::getBotConfig();

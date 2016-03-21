@@ -110,12 +110,11 @@ class Team_Index implements PublicSection
                         HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
                     }
 
-                    $date = $this->season->getPublishDateForWeek($match->week);
+                    $date = $this->season->getPublishTimeForWeek($match->week);
 
                     if ($match->team1id == $this->team->teamid) {
                         $posIndex = 0;
-                    }
-                    else {
+                    } else {
                         $posIndex = 1;
                     }
 

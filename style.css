@@ -150,7 +150,7 @@ a:hover {
     display: inline-block;
     color: #333;
     text-decoration: none;
-    padding: 6px 25px;
+    padding: 6px 20px;
     margin-right: 1px;
 }
 #topmenu a:hover, a.selected, .nav a:hover, .nav a.selected, .nav-bottom a:hover, .nav-bottom a.selected {

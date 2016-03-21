@@ -79,19 +79,19 @@ class Season extends Model
         return $this->mainweeks + $this->playoffsweeks;
     }
 
-    function getPublishDateForWeek($week) {
+    function getPublishTimeForWeek($week) {
         $str = $this->getWeekDate($week);
-        $date = mktime(17, 0, 0, 12, 31, 2099);
+        $time = mktime(17, 0, 0, 12, 31, 2099);
 
         if (preg_match("'^([0-9]{4})\\-([0-9]{2})\\-([0-9]{2})$'", $str, $match)) {
-            $date = mktime(17, 0, 0, $match[2]*1, $match[3]*1, $match[1]*1);
+            $time = mktime(17, 0, 0, $match[2]*1, $match[3]*1, $match[1]*1);
         }
 
-        return $date;
+        return $time;
     }
 
     function weekIsPublished($week) {
-        $date = $this->getPublishDateForWeek($week);
+        $date = $this->getPublishTimeForWeek($week);
         return ($date >= 86400 && time() >= $date);
     }
 }
