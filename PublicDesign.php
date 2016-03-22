@@ -41,7 +41,7 @@ class PublicDesign extends HTMLResponse
         $this->setMeta('viewport', 'width=device-width, initial-scale=1.0');
         $this->setTitle($section->getTitle() . ' - ' . $section->getSubtitle());
 
-        $this->addStyleSheet('/style.css');
+        $this->addStyleSheet('/css/style.css');
 
         if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == '::1') {
             $this->addJavaScript("http://localhost/jquery.js", true);
@@ -94,7 +94,11 @@ class PublicDesign extends HTMLResponse
         }
         */
 
-        $this->addJavaScript('/lce.js', true);
+        $this->addJavaScript('/js/lce.js', true);
+        ob_start();
+        $this->section->show();
+        $this->contents = ob_get_contents();
+        ob_end_clean();
     }
 
 

@@ -68,6 +68,19 @@ class Team_Index implements PublicSection
             $resultNames[] = ["Derrota 0-$i", "Victoria $i-0"];
         }
 
+        if (!($csrf = $_SESSION['csrf'])) {
+            $_SESSION['csrf'] = $csrf = rand(1, 1000000);
+        }
+        $postCsrf = HTMLResponse::fromPOST('csrf', '');
+
+        if ($postCsrf == $csrf) {
+            if (HTMLResponse::fromPOST('color') !== null) {
+                $this->team->color = HTMLResponse::fromPOST('color');
+                $this->team->save();
+            }
+        }
+        $color = $this->team->color;
+
         ?>
         <div class="inblock" style="margin-right: 16px">
             <a target="_blank" href="/<?=$this->team->getImageLink()?>">
@@ -76,11 +89,45 @@ class Team_Index implements PublicSection
             <a href="https://twitter.com/hashtag/<?=$this->team->getHashtag()?>" target="_blank">#<?=$this->team->getHashtag()?></a>
             <div style="height:2px"></div>
             <a href="https://twitter.com/<?=$this->team->username?>" target="_blank">@<?=$this->team->username?></a>
-            <?
+            <div style="height: 6px"></div>
+
+            <span style="text-decoration: underline;">Color oficial</span>: <?
+            if (preg_match("'^#[abcdefABCDEF0-9]{6}$'", $color)) {
+                ?><span id="teamcolor"><?= $color ?></span><?
+            } else {
+                ?><i id="teamcolor">Sin color</i><?
+                $color = '#000000';
+            }
+            ?>
+            <div class="teamcolor" style="background: <?=$color?>"></div>
+
+            <br><?
             if ($this->team->isManager()) {
                 ?>
                 <br>Eres el Manager del equipo.
+
+                <form action="<?=HTMLResponse::getRoute()?>" method="post" id="colorform">
+                    <input type="hidden" name="color" value="<?=$color?>">
+                    <input type="hidden" name="csrf" value="<?=$csrf?>">
+                </form>
                 <?
+                $this->design->addJavaScript('/js/jquery-ui.min.js');
+                $this->design->addStyleSheet('/css/jquery-ui.min.css');
+                $this->design->addStyleSheet('/css/jquery.colorpicker.css');
+                $this->design->addJavaScript('/js/jquery.colorpicker.js');
+                $this->design->addJavaScript("
+                    $('.teamcolor').colorpicker({
+                    inline: false,
+                    color: '{$color}',
+                    colorFormat: '#HEX',
+                    closeOnOutside: false,
+                    closeOnEscape: false,
+                    ok: function(event, color) {
+                        $('#colorform input[name=\"color\"]').val(color.formatted);
+                        $('#colorform').submit();
+                    }
+                    }).css('cursor', 'pointer');
+                    ", false);
             }
             ?>
         </div>

@@ -13,6 +13,7 @@ class Team extends Model {
     public $ispublic;
     public $isadmin;
     public $ismember;
+    public $color;
 
     /**
      * @param $link
