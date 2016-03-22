@@ -65,6 +65,21 @@ class Calendar implements PublicSection
             }
         }
 
+        $seasonEvents = $this->season->getEvents();
+        foreach($seasonEvents as $event) {
+            $events[$event[1]][] = [$event[0], $event[2]];
+            $eventTime = Season::dateToTime($event[1]);
+
+            if ($eventTime > 1000 && date('Y', $eventTime)*1 != 2099) {
+                if ($start === null || $eventTime < $start) {
+                    $start = $eventTime;
+                }
+                if ($end === null || $eventTime > $end) {
+                    $end = $eventTime;
+                }
+            }
+        }
+
         if ($start && $end) {
             $year = date('Y', $start)*1;
             $month = date('m', $start)*1;
@@ -124,7 +139,7 @@ class Calendar implements PublicSection
                                     <?= $d ?>
                                 </div>
                                 <div class="inblock middle">
-                                    <div style="text-align: center; width: 80px; margin: 6px 0px">
+                                    <div style="text-align: center; min-width: 50px; margin: 6px 0px">
                                         <?
                                         if (!$dayEvents) echo "&nbsp;";
                                         foreach($dayEvents as $event) { ?>

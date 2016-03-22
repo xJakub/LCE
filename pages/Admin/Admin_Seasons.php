@@ -73,12 +73,15 @@ class Admin_Seasons implements PublicSection
                         <?= $season->ispublic ? 'Pública' : 'Oculta' ?>
                         <?= $season->isdefault ? '(por defecto)' : '' ?>
                     </td>
-                    <td>
+                    <td style="text-align: left">
                         <a href="/admin/temporadas/<?=$season->seasonid?>/">
                             Editar temporada
                         </a><br>
                         <a href="/admin/temporadas/<?=$season->seasonid?>/jornadas/">
                             Editar jornadas
+                        </a><br>
+                        <a href="/admin/temporadas/<?=$season->seasonid?>/eventos/">
+                            Editar eventos
                         </a>
                     </td>
                 </tr>

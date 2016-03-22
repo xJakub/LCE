@@ -51,6 +51,7 @@ $router->addRoute("/admin/equipos/{$rNum}/", array('Admin_Team'));
 $router->addRoute("/admin/temporadas/", array('Admin_Seasons'));
 $router->addRoute("/admin/temporadas/{$rNum}/", array('Admin_Season'));
 $router->addRoute("/admin/temporadas/{$rNum}/jornadas/", array('Admin_Season_Weeks'));
+$router->addRoute("/admin/temporadas/{$rNum}/eventos/", array('Admin_Season_Events'));
 
 $router->addRoute("/", array('Index'));
 $router->addRoute("/batch/", array('Batch'));

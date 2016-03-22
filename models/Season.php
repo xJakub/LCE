@@ -16,6 +16,7 @@ class Season extends Model
     public $playoffsweeks;
     public $weeknames;
     public $weekdates;
+    public $events;
 
     /**
      * @param $link
@@ -81,6 +82,10 @@ class Season extends Model
 
     function getPublishTimeForWeek($week) {
         $str = $this->getWeekDate($week);
+        return Season::dateToTime($str);
+    }
+
+    static function dateToTime($str) {
         $time = mktime(17, 0, 0, 12, 31, 2099);
 
         if (preg_match("'^([0-9]{4})\\-([0-9]{2})\\-([0-9]{2})$'", $str, $match)) {
@@ -93,6 +98,17 @@ class Season extends Model
     function weekIsPublished($week) {
         $date = $this->getPublishTimeForWeek($week);
         return ($date >= 86400 && time() >= $date);
+    }
+
+    function getEvents() {
+        if (!strlen($this->events)) {
+            $this->events = "[]";
+        }
+        return json_decode($this->events, true);
+    }
+
+    function setEvents($events) {
+        $this->events = json_encode($events);
     }
 }
 Season::init('seasons', 'seasonid');

@@ -43,7 +43,7 @@ class Admin_Index implements PublicSection
             <ul>
                 <li><a href="/admin/comunicados/">Enviar comunicados (a través de Twitter)</a></li>
                 <li><a href="/admin/equipos/">Administrar equipos</a></li>
-                <li><a href="/admin/temporadas/">Administrar temporadas (y jornadas)</a></li>
+                <li><a href="/admin/temporadas/">Administrar temporadas</a></li>
             </ul>
         </div>
         <?
