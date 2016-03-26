@@ -24,10 +24,7 @@ class Team_Index implements PublicSection
             && !SeasonTeam::findOne('seasonid = ? and teamid = ? and ispublic', [$this->season->seasonid, $this->team->teamid])
         ) HTMLResponse::exitWithRoute("/$seasonLink/equipos/");
 
-        $this->tiers = ['OverUsed','OverUsed','OverUsed',
-            'UnderUsed','UnderUsed','UnderUsed',
-            'RarelyUsed','RarelyUsed','RarelyUsed',
-            'NeverUsed','NeverUsed','NeverUsed'];
+        $this->tiers = $this->season->getPlayerNames();
     }
 
     public function setDesign(PublicDesign $response)
@@ -309,7 +306,7 @@ class Team_Index implements PublicSection
         <h2>Editar jugadores iniciales</h2>
         <div class="inblock" style="display: inline-block; text-align: left">
         <?
-        for ($i=1; $i<=count($this->tiers); $i++) {
+        for ($i=1; $i<=$this->season->teamplayers; $i++) {
             $player = Player::findOne('teamid = ? and number = ? and seasonid = ?',
                 [$this->team->teamid, $i, $this->season->seasonid]);
             $pname = $player ? $player->name : '';
@@ -352,13 +349,25 @@ class Team_Index implements PublicSection
 
         ?>
         <h2>Jugadores iniciales</h2>
-        <? for ($y=0; $y<4; $y++) {
+        <? for ($y=0; $y*3 < $this->season->teamplayers; $y++) {
         ?><table>
         <thead>
         <tr>
-            <td colspan="3">
-                <?= $this->tiers[$y * 3] ?>
-            </td>
+            <?
+            $colspan = 1;
+            for ($x=0; $x<3; $x++) {
+                if ($x != 2 && ($this->tiers[$y*3 + $x] == $this->tiers[$y*3 + $x + 1])) {
+                    $colspan++;
+                }
+                else {
+                    ?>
+                    <td colspan="<?=$colspan?>">
+                        <?= $this->tiers[$y*3 + $x] ?>
+                    </td>
+                    <?
+                    $colspan = 1;
+                }
+            } ?>
         </tr>
         </thead><tr><?
             for ($x=0; $x<3; $x++) {

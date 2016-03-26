@@ -49,6 +49,14 @@ class Admin_Season implements PublicSection
 
         if ($postCsrf == $csrf) {
             $this->season->name = HTMLResponse::fromPOST('name', $this->season->name);
+            $this->season->teamplayers = min(HTMLResponse::fromPOST('teamplayers', $this->season->teamplayers), 99);
+
+            $playerNames = $this->season->getPlayerNames();
+            for ($i=0; $i<$this->season->teamplayers; $i++) {
+                $playerNames[$i] = HTMLResponse::fromPOST("player{$i}name", $playerNames[$i]."");
+            }
+            $this->season->setPlayerNames($playerNames);
+
             $this->season->ispublic = !!HTMLResponse::fromPOST("ispublic", 0);
 
             $this->season->isdefault = 0;
@@ -95,9 +103,37 @@ class Admin_Season implements PublicSection
                         Por defecto<br>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <b>Jugadores por equipo</b>
+                    </td><td>
+                        <input name="teamplayers" type="number" value="<?=htmlentities($this->season->teamplayers)?>">
+                    </td>
+                </tr>
             </table>
             <input type="hidden" name="csrf" value="<?= $csrf ?>"><br><br>
 
+            <table style="width:640px; margin: 0 auto">
+                <thead>
+                <tr>
+                    <td colspan="3">Nombres de jugadores</td>
+                </tr>
+                </thead>
+                <tr>
+                    <?
+                    $playerNames = $this->season->getPlayerNames();
+
+                    for ($i=0; $i<$this->season->teamplayers; $i++) {
+                    if ($i > 0 && ($i % 3) == 0) {
+                    ?></tr><tr><?
+                    }
+                    ?><td style="padding: 6px">
+                        <input name="player<?=$i?>name" placeholder="Jugador <?=$i+1?>" value="<?=htmlentities($playerNames[$i])?>">
+                    </td><?
+                    }
+                    ?>
+                </tr>
+            </table><br><br>
 
             <table style="width:640px; margin: 0 auto; text-align: left">
                 <thead>

@@ -17,6 +17,8 @@ class Season extends Model
     public $weeknames;
     public $weekdates;
     public $events;
+    public $teamplayers;
+    public $playernames;
 
     /**
      * @param $link
@@ -109,6 +111,17 @@ class Season extends Model
 
     function setEvents($events) {
         $this->events = json_encode($events);
+    }
+
+    function getPlayerNames() {
+        if (!strlen($this->playernames)) {
+            $this->playernames = "[]";
+        }
+        return json_decode($this->playernames, true);
+    }
+
+    function setPlayerNames($playerNames) {
+        $this->playernames = json_encode($playerNames);
     }
 }
 Season::init('seasons', 'seasonid');
