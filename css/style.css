@@ -1,0 +1,330 @@
+#main {
+    text-align: center;
+    font-family: Verdana, serif;
+    font-size: 13px;
+}
+
+.content {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+body {
+    background-attachment: fixed;
+}
+
+.teambox {
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+
+.teambox img {
+    max-width: 200px;
+    max-height: 150px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
+.miniteambox {
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+
+.teamimg64 {
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+
+.teamimg64 > img {
+    max-width: 64px;
+    max-height: 64px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
+.miniteambox img {
+    max-width: 120px;
+    max-height: 90px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
+.vsbox {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 15px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    padding: 3px;
+}
+
+.matchbox {
+    display: inline-block;
+    margin: 6px;
+    background: #f0f0f0;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 11px;
+    overflow: hidden;
+}
+
+.title {
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 6px;
+    margin-bottom: 3px;
+}
+
+.votecount {
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+    width: 100%;
+    font-size: 13px;
+}
+
+.vote {
+    position: absolute;
+    bottom: 0;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+}
+
+.login {
+    position: absolute;
+    bottom: 0;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+    width: 100%;
+    font-size: 13px;
+}
+
+a {
+    text-decoration: none;
+    color: #06a;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    border: 1px solid #ccc;
+    max-width: 960px;
+    margin: 0 auto;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+
+#topmenu a, .nav a, .nav-bottom a, .nav div {
+    display: inline-block;
+    color: #333;
+    text-decoration: none;
+    padding: 6px 20px;
+    margin-right: 1px;
+}
+#topmenu a:hover, a.selected, .nav a:hover, .nav a.selected, .nav-bottom a:hover, .nav-bottom a.selected {
+    background: #ddd;
+    color: #000;
+}
+
+.nav select {
+    border: 0;
+}
+
+.nav {
+    border-bottom: 1px solid #ccc;
+    font-size: 13px;
+}
+.nav-bottom {
+    border-top: 1px solid #ccc;
+    font-size: 13px;
+}
+
+.nav-bottom a {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.nav a:hover, .nav-bottom a:hover {
+}
+
+.teamlogo {
+    max-width:300px;
+    max-height:200px;
+}
+
+.inblock {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.middle {
+    vertical-align: middle;
+}
+
+#main table {
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+    border: 1px dotted #ccc;
+    border-collapse: collapse;
+}
+
+#main table td, #main .box table td {
+    /* padding: 3px 6px; */
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    border-left: 0;
+    border-right: 0;
+}
+
+#main table.vborders td, #main .box.vborders table td {
+    border: 1px solid #ddd;
+}
+
+#main table td:first-child, #main .box table td:first-child {
+    border-left: 1px solid #ddd;
+}
+#main table td:last-child, #main .box table td:last-child {
+    border-right: 1px solid #ddd;
+}
+#main table tr.finished td, #main .box table tr.finished td {
+    background: #eee;
+    color: #333;
+}
+
+#main table thead td, #main .box table thead td {
+    background: #ddd;
+    /* padding-right: 20px; */
+    border: 1px solid #ccc;
+}
+
+#main h2 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    text-align: left;
+    font-size: 18px;
+}
+
+.editResult {
+    display: none;
+}
+
+.editableResult {
+    cursor: pointer;
+}
+
+.editableResult:hover {
+    text-decoration: underline;
+}
+
+.editableVideo:hover {
+    cursor: pointer;
+    font-style: normal;
+}
+
+.editVideo {
+    font-size: 11px;
+    color: #369;
+
+}
+
+.editVideo:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.success-icon {
+    width: 20px;
+    height: 20px;
+    background: green;
+    border-radius: 10px;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+    display: inline-block;
+}
+.fail-icon {
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 10px;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+.grayscale {
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+}
+
+.right {
+    text-align: right;
+}
+
+.blueminibutton {
+    display: inline-block;
+    border-radius: 8px;
+    vertical-align: middle;
+    line-height: 14px;
+    text-align: center;
+    background: blue;
+    width: 14px;
+    height: 14px;
+    color: white;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.banner {
+    display: none;
+    background: url(/img/banner.jpg);
+    height: 200px;
+}
+
+.teamcolor {
+    display: inline-block;
+    vertical-align: middle;
+    width: 14px;
+    height: 14px;
+    border: 1px solid black;
+    padding: 3px;
+    font-size: 3px;
+}
+
+.ui-widget {
+    font-size: 12px !important;
+}

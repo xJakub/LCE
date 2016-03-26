@@ -94,7 +94,7 @@ class Calendar implements PublicSection
             while (($time = mktime(0, 0, 0, $month, 1, $year)) <= $end) {
                 ?>
                 <div class="inblock" style="margin: 8px">
-                    <table>
+                    <table class="vborders">
                         <thead>
                         <tr>
                             <td colspan="7">
@@ -139,7 +139,7 @@ class Calendar implements PublicSection
                                     <?= $d ?>
                                 </div>
                                 <div class="inblock middle">
-                                    <div style="text-align: center; min-width: 50px; margin: 6px 0px">
+                                    <div style="text-align: center; min-width: 48px; margin: 6px 0px">
                                         <?
                                         if (!$dayEvents) echo "&nbsp;";
                                         foreach($dayEvents as $event) { ?>
