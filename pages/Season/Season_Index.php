@@ -22,6 +22,10 @@ class Season_Index implements PublicSection {
         $maxWeekMatch = Match::findOne('seasonid = ? order by week desc limit 1', [$this->season->seasonid]);
         $this->maxWeek = $maxWeekMatch->week;
 
+        while(!$this->season->weekIsPublic($this->maxWeek)) {
+            $this->maxWeek--;
+        }
+
         if ($requestedWeek && $requestedWeek <= $this->maxWeek) {
             $this->week = $requestedWeek;
         }
@@ -82,26 +86,46 @@ class Season_Index implements PublicSection {
                 <?= date('H:i', $publishTime) ?> (hora española)
             </div>
         <? } ?>
-        <div style="overflow: hidden">
-            <?
-            if ($this->week > 1) {
-                ?>
-                <a style="float:left; margin-left: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week-1?>/">
-                    &lt;&lt;
-                    Ver <?= strtolower($this->season->getWeekName($this->week-1)) ?>
-                </a>
-                <?
-            }
-            if ($this->week < $this->maxWeek) {
-                ?>
-                <a style="float:right; margin-right: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week+1?>/">
-                    Ver <?= strtolower($this->season->getWeekName($this->week+1)) ?>
-                    &gt;&gt;
-                </a>
-                <?
-            }
-            ?>
-        </div>
+        <div style="height: 6px"></div>
+        <table style="border: 0; padding: 0; margin: 0; width: 100%">
+            <tr>
+                <td style="width: 150px; border: 0; padding: 0; margin: 0; text-align: left">
+                    <?
+                    if ($this->week > 1) {
+                        ?>
+                        <a style="float:left; margin-left: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week-1?>/">
+                            &lt;&lt;
+                            Ver <?= strtolower($this->season->getWeekName($this->week-1)) ?>
+                        </a>
+                        <?
+                    }
+                    ?>
+                </td>
+                <td style="border: 0; padding: 0; margin: 0; text-align: center">
+                    <?
+                    if (time() >= $publishTime) {
+                        ?>
+                        <a href="javascript:void(0)" onclick="$('._grayscale').toggleClass('grayscale'); $('.result').toggle(); $(this).find('span').toggle()">
+                            <span>Mostrar resultados</span>
+                            <span style="display: none">Ocultar resultados</span>
+                        </a>
+                        <?
+                    }
+                    ?>
+                </td>
+                <td style="width: 150px; border: 0; padding: 0; margin: 0; text-align: right"><?
+                    if ($this->week < $this->maxWeek) {
+                        ?>
+                        <a style="float:right; margin-right: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week+1?>/">
+                            Ver <?= strtolower($this->season->getWeekName($this->week+1)) ?>
+                            &gt;&gt;
+                        </a>
+                        <?
+                    }
+                    ?>
+                </td>
+            </tr>
+        </table>
         <?
 
         $matches = Match::find('seasonid = ? and week = ? order by matchid asc', [$this->season->seasonid, $week]);
@@ -167,7 +191,7 @@ class Season_Index implements PublicSection {
                         $score1 = $team1->teamid==$match->getWinner() ? 6-$match->getLooserKills() : 0;
                         $score2 = $team2->teamid==$match->getWinner() ? 6-$match->getLooserKills() : 0;
                         ?>
-                        <div style="font-size:90%">
+                        <div style="font-size:90%; display: none" class="result">
                             <?=$score1?>-<?=$score2?>
                         </div>
                         <?
@@ -188,8 +212,8 @@ class Season_Index implements PublicSection {
      */
     private function showTeamBox($match, $team, $team1votes, $votesCount)
     {
-        $video = Video::findOne('matchid = ? and teamid = ?',
-            [$match->matchid, $team->teamid]);
+        $video = Video::findOne('matchid = ? and teamid = ? and type = ?',
+            [$match->matchid, $team->teamid, 1]);
 
         $canVote = $this->canVote;
 
@@ -239,11 +263,15 @@ class Season_Index implements PublicSection {
                             Ver combate
                         </a>
                     <? } ?>
-                <? } else { ?>
+                <? } else if (!$match->isPublished()) { ?>
                     <a href="<?= HTMLResponse::getRoute() ?>?authenticate=1" class="login">&iexcl;Entra para ver tus votos!</a>
+                <? } else if ($video) { ?>
+                    <a class="login" href="<?=htmlentities($video->link)?>" target="_blank">
+                        Ver combate
+                    </a>
                 <? } ?>
             <? } ?>
-            <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><img class="<?=$isGray?'grayscale':''?>" src="/<?=$team->getImageLink(200, 150)?>"></a>
+            <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><img class="<?=$isGray?'_grayscale':''?>" src="/<?=$team->getImageLink(200, 150)?>"></a>
         </div>
         <?
     }

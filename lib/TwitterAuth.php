@@ -171,4 +171,14 @@ class TwitterAuth
         }
         return $botConnection->post('direct_messages/new', ['text'=>$message, 'screen_name'=>$dest]);
     }
+
+    public static function botSendTweet($message) {
+        static $botConnection = null;
+        if (!$botConnection) {
+            $botConfig = self::getBotConfig();
+            $botConnection = new TwitterOAuth(CONSUMER_KEY_BOT, CONSUMER_SECRET_BOT,
+                $botConfig['oauth_token'], $botConfig['oauth_token_secret']);
+        }
+        return $botConnection->post('statuses/update', ['status'=>$message]);
+    }
 }

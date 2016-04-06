@@ -102,6 +102,12 @@ class Season extends Model
         return ($date >= 86400 && time() >= $date);
     }
 
+    function weekIsPublic($week) {
+        if ($week <= 1) return true;
+        $time = $this->getPublishTimeForWeek($week-1);
+        return (time() > $time);
+    }
+
     function getEvents() {
         if (!strlen($this->events)) {
             $this->events = "[]";

@@ -147,6 +147,10 @@ class Team_Index implements PublicSection
                 <? foreach(Match::find('(team1id = ? or team2id = ?) and seasonid = ? order by week asc',
                     [$this->team->teamid, $this->team->teamid, $this->season->seasonid]) as $match) {
 
+                    if (!$this->team->isManager() && !$this->season->weekIsPublic($match->week)) {
+                        continue;
+                    }
+
                     if (HTMLResponse::fromPOST('matchid', '') === $match->matchid &&
                         strlen($newResult = HTMLResponse::fromPOST('result', ''))) {
                         $match->result = $newResult;
@@ -294,7 +298,7 @@ class Team_Index implements PublicSection
             </div>
             <?
         }
-        else if ($video && $match->isPublished()) {
+        else if ($video && ($type != 1 || $match->isPublished())) {
             ?><a href="<?=htmlentities($video->link)?>" target="_blank"><?= $label ?></a><br><?
         }
 
