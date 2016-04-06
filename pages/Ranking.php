@@ -43,6 +43,9 @@ class Ranking implements PublicSection
         $games = [];
         $kills = [];
         $deaths = [];
+        $mainPositions = [];
+        $playoffsDefeat = [];
+        $playoffsLast = [];
 
         foreach($matches as $match) {
             if ($match->week > $this->season->mainweeks) continue;
@@ -69,6 +72,50 @@ class Ranking implements PublicSection
             $tiebreakers[$teamid] = array($wins[$teamid], $kills[$teamid]-$deaths[$teamid], $kills[$teamid], -$deaths[$teamid]);
         }
         arsort($tiebreakers);
+
+        $lastPos = 0;
+        $lastTiebreakers = null;
+        foreach(array_keys($tiebreakers) as $pos => $teamid) {
+            if ($lastTiebreakers != $tiebreakers[$teamid]) {
+                $lastPos = $pos;
+            }
+            $mainPositions[$teamid] = $lastPos;
+            $lastTiebreakers = $tiebreakers[$teamid];
+        }
+
+        foreach($matches as $match) {
+            if ($match->week <= $this->season->mainweeks) continue;
+            if (!$this->season->weekIsPublished($match->week)) continue;
+
+            $winner = $match->getWinner();
+            if (!$winner) continue;
+            $looser = $match->getLooser();
+
+            $playoffsDefeat[$looser] = -$match->week;
+            $playoffsLast[$winner] = $match->week;
+            $playoffsLast[$looser] = $match->week;
+
+            $playoffsPlayed[$winner] = 1;
+            $playoffsPlayed[$looser] = 1;
+
+            $games[$winner]++;
+            $games[$looser]++;
+
+            $wins[$winner]++;
+
+            $kills[$winner] += 6;
+            $deaths[$looser] += 6;
+
+            $looserKills = $match->getLooserKills();
+            $kills[$looser] += $looserKills;
+            $deaths[$winner] += $looserKills;
+        }
+
+        foreach(array_keys($kills) as $teamid) {
+            $tiebreakers[$teamid] = array($playoffsLast[$teamid]*1, $playoffsDefeat[$teamid]*1, -$mainPositions[$teamid]);
+        }
+        arsort($tiebreakers);
+
 
         ?>
         <table>
@@ -98,14 +145,21 @@ class Ranking implements PublicSection
 
                 ?>
                 <tr>
-                    <td><?= $lastPos+1 ?>º</td>
+                    <td><?= $lastPos+1 ?>º
+                        <? if (isset($mainPositions[$teamid]) && $lastPos != $mainPositions[$teamid]) { ?>
+                            <div style="height: 4px"></div>
+                            <i title="<?= $mainPositions[$teamid]+1 ?>º en las jornadas" style="cursor: pointer; color: #666">
+                                <?= $mainPositions[$teamid]+1 ?>º
+                            </i>
+                        <? } ?>
+                    </td>
                     <td style="text-align: left">
                         <div class="teamimg64">
                             <img src="/<?=$team->getImageLink(64, 64)?>">
                         </div>
                         <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/" class="inblock" style="vertical-align:middle">
                             <?= $team->name ?>
-                    </a></td>
+                        </a></td>
                     <td><?= $games[$teamid] ?></td>
                     <td><b><?= $wins[$teamid]*1 ?></b></td>
                     <td><?= $games[$teamid]-$wins[$teamid] ?></td>
