@@ -55,7 +55,7 @@ class BetsRanking implements PublicSection
         $correctBets = [];
 
         $usernames = [];
-        $avatars = [];
+        $avatars = Model::pluck(Avatar::find('1=1'), 'url', 'userid');
 
         foreach(Bet::find('1=1') as $bet) {
             if (isset($matchWinner[$bet->matchid])) {
@@ -66,9 +66,6 @@ class BetsRanking implements PublicSection
             }
             if ($bet->username) {
                 $usernames[$bet->userid] = $bet->username;
-            }
-            if ($bet->avatar) {
-                $avatars[$bet->userid] = $bet->avatar;
             }
         }
 
@@ -201,6 +198,10 @@ class BetsRanking implements PublicSection
 
                     if ($lastTiebreakers != $tiebreakers[$userid]) {
                         $lastPos = $pos;
+                    }
+
+                    if (!isset($avatars[$userid])) {
+                        Avatar::setUsersAvatar($userid, $usernames[$userid]);
                     }
                     ?>
                     <tr>

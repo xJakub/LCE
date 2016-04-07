@@ -93,37 +93,28 @@ class TwitterAuth
     {
         $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
 
-        // Seamos francos. Necesitamos los avatares.
-        // Así que aprovechamos el login para coger el avatar del usuario
-        // y de los usuarios para los que no tengamos avatares.
+        $json = $connection->get('users/show', ['user_id' => $_SESSION['twitter-userid']]);
 
-        $userids = Model::pluck(Bet::find('avatar = "" and userid != "" group by userid limit 100'), 'userid');
+        $_SESSION['twitter-avatar'] = isset($json->profile_image_url) ? $json->profile_image_url : '';
+        Avatar::setUsersAvatar($_SESSION['twitter-userid'], $_SESSION['twitter-username'], $_SESSION['twitter-avatar']);
 
-        if (count($userids)) {
-            $json = $connection->get('users/lookup', ['user_id' => implode(',', $userids)]);
+        $oldAvatars = Avatar::find('1=1 order by dateline asc limit 100');
 
-            $newavatars = [];
+        if ($oldAvatars) {
+            $oldAvatarsIds = Model::pluck($oldAvatars, 'userid');
+            $json = $connection->get('users/lookup', ['user_id' => implode(',', $oldAvatarsIds)]);
 
             foreach ($json as $userdata) {
                 $newavatars[$userdata->id_str] = $userdata->profile_image_url;
             }
 
-            /**
-             * @var $bets Bet[]
-             */
-            $bets = Bet::find('userid in (' . implode(',', $userids) . ')');
-
-            foreach ($bets as $index => $bet) {
-                $userid = $bet->userid;
-                $bet->avatar = $newavatars[$userid] ? $newavatars[$userid] : 'about:blank';
+            foreach($oldAvatars as $avatar) {
+                $avatar->url = $newavatars[$avatar->userid];
+                $avatar->dateline = time();
             }
 
-            Model::saveAll($bets);
+            Model::saveAll($oldAvatars);
         }
-
-        $json = $connection->get('users/show', ['user_id' => $_SESSION['twitter-userid']]);
-        $_SESSION['twitter-avatar'] = isset($json->profile_image_url) ? $json->profile_image_url : '';
-
     }
 
     public static function forceLogin() {
