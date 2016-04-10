@@ -218,6 +218,100 @@ class Team_Index implements PublicSection
             if ($this->team->isManager()) {
                 $this->showPlayersEditor();
             }
+
+            $sanctionLevels = Sanction::getLevelNames();
+
+            $sanctions = Sanction::find('seasonid = ? and teamid = ? order by dateline desc',
+                [$this->season->seasonid, $this->team->teamid]);
+
+            if ($sanctions && Team::isMember()) {
+                ?>
+                <h2>Sanciones recibidas</h2>
+                <table style="min-width: 512px">
+                    <thead>
+                    <tr>
+                        <!-- <td>Fecha</td> -->
+                        <td>Tipo</td>
+                        <td>Razón</td>
+                    </tr>
+                    </thead>
+
+                    <? foreach($sanctions as $sanction) { ?>
+                        <tr>
+                            <!-- <td style="font-style: italic">
+                                <?= date("Y-m-d H:i:s", $sanction->dateline) ?>
+                            </td> -->
+                            <td>
+                                <?= $sanctionLevels[$sanction->level] ?>
+                                <? if (Team::isAdmin()) { ?>
+                                    <i style="color: #666">
+                                        por
+                                    </i>
+                                    <?= htmlentities($sanction->adminname) ?>
+                                <? } ?>
+                            </td>
+                            <td>
+                                <?= htmlentities($sanction->reason) ?>
+                            </td>
+                        </tr>
+                    <? } ?>
+                </table><br>
+
+                <?
+            }
+
+            if (Team::isAdmin()) {
+
+                $postCsrf = HTMLResponse::fromPOST('sanctioncsrf', '');
+
+                if ($postCsrf == $csrf) {
+                    if (strlen($reason = HTMLResponse::fromPOST('sanctionreason'))) {
+                        $sanction = Sanction::create();
+                        $sanction->adminid = TwitterAuth::getUserId();
+                        $sanction->adminname = TwitterAuth::getUserName();
+                        $sanction->dateline = time();
+                        $sanction->reason = $reason;
+                        $sanction->seasonid = $this->season->seasonid;
+                        $sanction->teamid = $this->team->teamid;
+                        $sanction->level = HTMLResponse::fromPOST('sanctionlevel', 0);
+                        $sanction->save();
+                        HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
+                    }
+                }
+
+                ?>
+                <h2>Añadir nueva sanción</h2>
+                <form action="<?=HTMLResponse::getRoute()?>" method="post">
+                    <table style="min-width: 512px">
+                        <thead>
+                        <tr>
+                            <td>Tipo</td>
+                            <td>Razón</td>
+                        </tr>
+                        </thead>
+
+                        <tr>
+                            <td>
+                                <select name="sanctionlevel">
+                                    <? foreach ($sanctionLevels as $index => $label) { ?>
+                                        <option value="<?=$index?>">
+                                            <?= $label ?>
+                                        </option>
+                                    <? } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <textarea name="sanctionreason" style="width: 250px"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="sanctioncsrf" value="<?=$csrf?>">
+                    <div style="height: 6px"></div>
+                    <button type="submit">Añadir sanción</button>
+                </form>
+                <?
+            } ?><br>
+            <?
             ?>
         </div>
         <?
