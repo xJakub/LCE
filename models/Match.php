@@ -52,11 +52,15 @@ class Match extends Model
         return $season->weekIsPublished($this->week);
     }
 
+    function isDelayed() {
+        return $this->result == 17;
+    }
+
     function getWinner() {
-        if ($this->result >= 1 && $this->result <= 7) {
+        if (($this->result >= 1 && $this->result <= 7) || $this->result == 15) {
             return $this->team1id;
         }
-        elseif ($this->result >= 8 && $this->result <= 14) {
+        elseif (($this->result >= 8 && $this->result <= 14) || $this->result == 16) {
             return $this->team2id;
         }
         else {
@@ -65,10 +69,11 @@ class Match extends Model
     }
 
     function getLooser() {
-        if ($this->result >= 1 && $this->result <= 7) {
+
+        if (($this->result >= 1 && $this->result <= 7) || $this->result == 15) {
             return $this->team2id;
         }
-        elseif ($this->result >= 8 && $this->result <= 14) {
+        elseif (($this->result >= 8 && $this->result <= 14) || $this->result == 16) {
             return $this->team1id;
         }
         else {
@@ -77,6 +82,8 @@ class Match extends Model
     }
 
     function getLooserKills() {
+        if ($this->result >= 15) return 0;
+
         if ($this->result >= 1 && $this->result <= 7) {
             return $this->result-1;
         }

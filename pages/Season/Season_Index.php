@@ -195,7 +195,11 @@ class Season_Index implements PublicSection {
                             <?=$score1?>-<?=$score2?>
                         </div>
                         <?
-                    } ?>
+                    } else if ($match->isPublished() && $match->isDelayed()) { ?>
+                        <div style="font-size:90%; display: none" class="result">
+                            Apl.
+                        </div>
+                    <? } ?>
                     VS
                 </div>
                 <? $this->showTeamBox($match, $team2, $team2votes, $votesCount) ?>

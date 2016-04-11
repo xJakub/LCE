@@ -64,6 +64,9 @@ class Team_Index implements PublicSection
         for ($i=0; $i<=6; $i++) {
             $resultNames[] = ["Derrota 0-$i", "Victoria $i-0"];
         }
+        $resultNames[] = ["Victoria 6-0 (sin jugar)", "Derrota 0-6 (sin jugar)"];
+        $resultNames[] = ["Derrota 0-6 (sin jugar)", "Victoria 6-0 (sin jugar)"];
+        $resultNames[] = ["Aplazado", "Aplazado"];
 
         if (!($csrf = $_SESSION['csrf'])) {
             $_SESSION['csrf'] = $csrf = rand(1, 1000000);

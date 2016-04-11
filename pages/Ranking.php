@@ -50,6 +50,7 @@ class Ranking implements PublicSection
         foreach($matches as $match) {
             if ($match->week > $this->season->mainweeks) continue;
             if (!$this->season->weekIsPublished($match->week)) continue;
+            if ($match->isDelayed()) continue;
 
             $winner = $match->getWinner();
             if (!$winner) continue;
@@ -86,6 +87,7 @@ class Ranking implements PublicSection
         foreach($matches as $match) {
             if ($match->week <= $this->season->mainweeks) continue;
             if (!$this->season->weekIsPublished($match->week)) continue;
+            if ($match->isDelayed()) continue;
 
             $winner = $match->getWinner();
             if (!$winner) continue;
