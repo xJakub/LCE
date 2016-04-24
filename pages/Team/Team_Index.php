@@ -69,7 +69,7 @@ class Team_Index implements PublicSection
         $resultNames[] = ["Aplazado", "Aplazado"];
 
         if (!($csrf = $_SESSION['csrf'])) {
-            $_SESSION['csrf'] = $csrf = rand(1, 1000000);
+            $_SESSION['csrf'] = $csrf = rand(1, 1000000) . "";
         }
         $postCsrf = HTMLResponse::fromPOST('csrf', '');
 
@@ -214,6 +214,8 @@ class Team_Index implements PublicSection
                 </tbody>
             </table>
             <?
+            $this->showFriendlyMatches();
+
             if ($this->team->isManager()) {
                 $this->checkPlayerChanges();
             }
@@ -521,6 +523,159 @@ class Team_Index implements PublicSection
                 $player->name = $name;
                 $player->save();
             }
+        }
+    }
+
+    private function showFriendlyMatches() {
+        $csrf = $_SESSION['csrf'];
+        $opponents = Model::indexBy($this->season->getTeams(), 'teamid');
+
+        $postCsrf = HTMLResponse::fromPOST('friendlycsrf', '');
+
+        if ($postCsrf == $csrf && $this->team->isManager()) {
+            $url = HTMLResponse::fromPOST('friendlyurl');
+            $opponentsId = HTMLResponse::fromPOST('friendlyopponentsid');
+            $publishDate = HTMLResponse::fromPOST('friendlydate');
+            $publishTime = HTMLResponse::fromPOST('friendlytime');
+
+            if (!strlen($publishDate)) $publishDate = date('Y-m-d');
+            if (!strlen($publishTime)) $publishTime = date('H').':00';
+
+            $possibleOpponents = Model::pluck($this->season->getTeams(), 'teamid');
+
+            $regex = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
+            $timeRegex = "'^[0-9]{2}:[0-9]{2}$'";
+            $dateRegex = "'^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}$'";
+
+            $removeId = HTMLResponse::fromPOST('removeid');
+            if ($removeId) {
+                /** @var Video $video */
+                if ($video = Video::findOne('seasonid = ? and type = ? and videoid = ? and teamid = ?',
+                    [$this->season->seasonid, 3, $removeId, $this->team->teamid])) {
+                    $video->delete();
+                    HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
+                }
+            }
+
+            if (!strlen($opponentsId) || !strlen($publishTime) || !strlen($publishDate) || !strlen($url)) {
+                $this->design->addJavaScript("
+                    $(function() { alert(\"No has rellenado todos los datos\"); })
+                ", false);
+            } else {
+                if ($opponentsId != $this->team->teamid && in_array($opponentsId, $possibleOpponents)) {
+                    if (!preg_match($regex, $url)) {
+                        $this->design->addJavaScript("
+                    $(function() { alert(\"El enlace que has puesto no es un enlace de YouTube válido\"); })
+                ", false);
+                    } else {
+                        if (!preg_match($timeRegex, $publishTime)) {
+                            $this->design->addJavaScript("
+                    $(function() { alert(\"La hora que has puesto tiene un formato inválido (ha de ser 08:06)\"); })
+                ", false);
+                        } else {
+                            if (!preg_match($dateRegex, $publishDate)) {
+                                $this->design->addJavaScript("
+                    $(function() { alert(\"La fecha que has puesto tiene un formato inválido (ha de ser 2099-12-31)\"); })
+                ", false);
+                            } else {
+                                $video = Video::create();
+                                $video->dateline = time();
+                                $video->publishdate = $publishDate;
+                                $video->publishtime = $publishTime;
+                                $video->link = $url;
+                                $video->opponentid = $opponentsId * 1;
+                                $video->teamid = $this->team->teamid;
+                                $video->type = 3;
+                                $video->seasonid = $this->season->seasonid;
+                                $video->save();
+                                HTMLResponse::exitWithRoute(HTMLResponse::getRoute());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $videos = Video::find('seasonid = ? and teamid = ? and type = ? order by publishdate asc, publishtime asc',
+            [$this->season->seasonid, $this->team->teamid, 3]);
+
+        if ($videos || $this->team->isManager()) {
+            ?>
+            <h2>Combates amistosos</h2>
+            <? if ($this->team->isManager()) { ?>
+                <form action="<?=HTMLResponse::getRoute()?>" method="post">
+            <? } ?>
+            <table>
+                <thead>
+                <tr>
+                    <td>Fecha</td>
+                    <td>Hora</td>
+                    <td>Oponentes</td>
+                    <td>Vídeo</td>
+                </tr>
+                </thead>
+                <? foreach($videos as $video) {
+                    if (!$this->team->isManager() &&
+                        ($video->publishdate > date('Y-m-d') || $video->publishtime > date('H:i'))) {
+                        continue;
+                    }
+                    ?>
+                    <tr>
+                        <td><?= $video->publishdate ?></td>
+                        <td><?= $video->publishtime ?></td>
+                        <td>
+                            <a href="/<?=$this->season->getLink()?>/equipos/<?=$opponents[$video->opponentid]->getLink()?>/">
+                                <?= htmlentities($opponents[$video->opponentid]->name) ?>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="<?=htmlentities($video->link)?>" target="_blank">
+                                Ver combate
+                            </a>
+                            <? if ($this->team->isManager()) { ?>
+                                <a style="font-size: 10px" href="javascript:void(0)" onclick="removeFriendlyVideo(this, <?=$video->videoid?>)">
+                                    (Quitar)
+                                </a>
+                            <? } ?>
+                        </td>
+                    </tr>
+                <? } ?>
+                <? if ($this->team->isManager()) { ?>
+                    <tr>
+                        <td>
+                            <input type="date" name="friendlydate" placeholder="<?=date('Y-m-d')?>" style="width:80px">
+                        </td>
+                        <td>
+                            <input name="friendlytime" placeholder="<?=date('H:i')?>" style="width: 64px">
+                        </td>
+                        <td>
+                            <select name="friendlyopponentsid">
+                                <option value="">-- Elige oponentes --</option>
+                                <?
+                                foreach($this->season->getTeams() as $team) {
+                                    if ($team->teamid == $this->team->teamid) continue;
+                                    ?>
+                                    <option value="<?=$team->teamid?>">
+                                        <?= htmlentities($team->name) ?>
+                                    </option>
+                                    <?
+                                }
+                                ?>
+                            </select>
+                        </td>
+                        <td>
+                            <input name="friendlyurl" placeholder="http://youtube.com/..." style="width:200px">
+                        </td>
+                    </tr>
+                <? } ?>
+            </table>
+            <? if ($this->team->isManager()) { ?>
+                <div style="height: 6px"></div>
+                <button type="submit">Añadir amostoso</button>
+                <input type="hidden" name="friendlycsrf" value="<?=$csrf?>">
+                <input type="hidden" name="removeid" value="">
+                </form>
+            <? }
         }
     }
 }

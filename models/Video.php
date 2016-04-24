@@ -16,6 +16,7 @@ class Video extends Model
     public $publishtime;
     public $matchid;
     public $type;
-
+    public $opponentid;
+    public $seasonid;
 }
 Video::init('videos', 'videoid');

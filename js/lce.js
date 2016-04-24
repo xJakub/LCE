@@ -43,3 +43,12 @@ function showApplicationVote(obj) {
     $(obj).closest('.application').find('.applicationvote').show();
     $(obj).hide();
 }
+
+function removeFriendlyVideo(obj, videoid) {
+    if (confirm('¿Seguro que quieres quitar este vídeo de la página?')) {
+        var form = $(obj).closest('form');
+        var input = form.find('input[name="removeid"]');
+        input.val(videoid);
+        form.submit();
+    }
+}
