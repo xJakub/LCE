@@ -616,7 +616,8 @@ class Team_Index implements PublicSection
                 </thead>
                 <? foreach($videos as $video) {
                     if (!$this->team->isManager() &&
-                        ($video->publishdate > date('Y-m-d') || $video->publishtime > date('H:i'))) {
+                        ($video->publishdate > date('Y-m-d') ||
+                            ($video->publishdate == date('Y-m-d') && $video->publishtime > date('H:i')))) {
                         continue;
                     }
                     ?>
