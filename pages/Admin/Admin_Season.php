@@ -68,6 +68,11 @@ class Admin_Season implements PublicSection
                 $this->season->isdefault = 1;
             }
 
+            if ($_FILES['background']['tmp_name']) {
+                $con = file_get_contents($_FILES['background']['tmp_name']);
+                file_put_contents($this->season->getBackgroundLink(true), $con);
+            }
+
             $this->season->save();
         }
 
@@ -108,6 +113,13 @@ class Admin_Season implements PublicSection
                         <b>Jugadores por equipo</b>
                     </td><td>
                         <input name="teamplayers" type="number" value="<?=htmlentities($this->season->teamplayers)?>">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Nueva imagen de fondo</b>
+                    </td><td>
+                        <input name="background" type="file">
                     </td>
                 </tr>
             </table>

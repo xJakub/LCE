@@ -129,5 +129,15 @@ class Season extends Model
     function setPlayerNames($playerNames) {
         $this->playernames = json_encode($playerNames);
     }
+
+
+    function getBackgroundLink($noBlank = false) {
+        $link = 'img/'.$this->getLink().'.jpg';
+        if (!$noBlank && !file_exists($link)) {
+            return "img/blank.png";
+        } else {
+            return $link;
+        }
+    }
 }
 Season::init('seasons', 'seasonid');

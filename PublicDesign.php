@@ -10,6 +10,10 @@ require_once('lib/HTMLResponse.php');
 
 class PublicDesign extends HTMLResponse
 {
+    /**
+     * @var Season
+     */
+    private $season;
 
 
     public function __construct(PublicSection $section)
@@ -58,6 +62,8 @@ class PublicDesign extends HTMLResponse
             })
         ", false);
 
+
+
         $this->season = null;
         if ($_SESSION['seasonid']) {
             $this->season = Season::get($_SESSION['seasonid']);
@@ -95,6 +101,15 @@ class PublicDesign extends HTMLResponse
         */
 
         $this->addJavaScript('/js/lce.js', true);
+        $this->addStyleSheet("
+            html {
+                background: url(/".$this->season->getBackgroundLink().") no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+        ", false);
         ob_start();
         $this->section->show();
         $this->contents = ob_get_contents();
