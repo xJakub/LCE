@@ -55,6 +55,8 @@ class Team extends Model {
         if (strtolower($username) == 'xjakub') return true;
         if (strtolower($username) == 'senixirabix') return true;
         if (strtolower($username) == 'pkmnraion') return true;
+        if (strtolower($username) == 'soldiermagma') return true;
+        if (strtolower($username) == 'failbor05') return true;
     }
 
     static function isAdmin($username = null) {

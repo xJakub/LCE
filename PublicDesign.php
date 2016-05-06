@@ -148,6 +148,9 @@ class PublicDesign extends HTMLResponse
                 <div style="padding: 6px">
                     <? if (TwitterAuth::isLogged()) { ?>
                         Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a>
+                        <? if (Team::isMember()) {
+                            ?>/ <a href="/votaciones/">Votaciones</a><?
+                        } ?>
                         <? if (Team::isSuperAdmin()) {
                             ?>/ <a href="/admin/">Panel de admin</a><?
                         } ?>
