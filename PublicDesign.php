@@ -190,7 +190,7 @@ class PublicDesign extends HTMLResponse
                     <?= $this->section->getSubtitle() ?>
                 </div>
 
-                <?=$this->section->show()?>
+                <?=$this->contents?>
             </div>
         </div>
         <?

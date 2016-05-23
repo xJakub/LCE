@@ -317,6 +317,7 @@ class Team_Index implements PublicSection
                 <?
             } ?><br>
             <?
+            $this->showTeamSeasons();
             ?>
         </div>
         <?
@@ -678,5 +679,59 @@ class Team_Index implements PublicSection
                 </form>
             <? }
         }
+    }
+
+    private function showTeamSeasons()
+    {
+        $teamSeasonIds = Model::pluck(SeasonTeam::find('teamid = ?', [$this->team->teamid]), 'seasonid');
+        $teamSeasons = Season::getMultiple($teamSeasonIds);
+        Model::orderBy($teamSeasons, 'seasonid');
+
+        $teamMatches = Match::find('team1id = ? or team2id = ?', [$this->team->teamid, $this->team->teamid]);
+        // $games = [];
+        $playedGames = [];
+        $wins = [];
+        $losses = [];
+
+        foreach($teamMatches as $match) {
+            // $games[$match->seasonid]++;
+            if ($match->getWinner() == $this->team->teamid) {
+                $playedGames[$match->seasonid]++;
+                $wins[$match->seasonid]++;
+            }
+            if ($match->getLooser() == $this->team->teamid) {
+                $playedGames[$match->seasonid]++;
+                $losses[$match->seasonid]++;
+            }
+        }
+
+        ?>
+        <h2>Actividad por temporadas</h2>
+
+        <table style="width: 400px">
+        <thead><tr>
+            <td>Nombre</td>
+            <td>Combates</td>
+            <td>Victorias</td>
+            <td>Derrotas</td>
+        </tr></thead>
+        <?
+        foreach($teamSeasons as $season) {
+            if (!$season->ispublic && !Team::isSuperAdmin()) continue;
+            ?>
+            <tr>
+                <td>
+                    <a href="/<?=$season->getLink()?>/equipos/<?=$this->team->getLink()?>/">
+                        <?= htmlentities($season->name) ?>
+                    </a>
+                </td>
+                <td><?= $playedGames[$season->seasonid] * 1 ?></td>
+                <td><?= $wins[$season->seasonid] * 1 ?></td>
+                <td><?= $losses[$season->seasonid] * 1 ?></td>
+            </tr>
+            <?
+        }
+        ?></table><br><?
+
     }
 }
