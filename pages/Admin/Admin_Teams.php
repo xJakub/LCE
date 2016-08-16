@@ -55,6 +55,18 @@ class Admin_Teams implements PublicSection
             </tr>
             </thead>
             <?
+
+            if ($csrf == $postCsrf) {
+                $newTeamName = HTMLResponse::fromPOST('newteamname', "");
+                $newUserName = HTMLResponse::fromPOST('newusername', "");
+                if (strlen($newUserName) && preg_match("'^[a-zA-Z0-9_]{1,16}$'", $newUserName)) {
+                    $newTeam = Team::create();
+                    $newTeam->username = $newUserName;
+                    $newTeam->name = $newTeamName;
+                    $newTeam->save();
+                }
+            }
+
             $teams = Team::find('1=1 order by name asc');
             foreach($teams as $team) {
                 $disabled = '';
@@ -103,7 +115,22 @@ class Admin_Teams implements PublicSection
                 </tr>
                 <?
             }
-            ?></table>
+            ?>
+            <tr>
+                <td style="text-align: center">
+                    -
+                </td>
+                <td style="padding-bottom: 12px; padding-top: 12px">
+                    @<input name="newusername" placeholder="Nuevo nick">
+                </td>
+                <td style="padding-bottom: 12px; padding-top: 12px">
+                    <input name="newteamname" placeholder="Nuevo equipo">
+                </td>
+                <td>
+                    -
+                </td>
+            </tr>
+        </table>
         <input type="hidden" name="csrf" value="<?= $csrf ?>"><br>
         <button type="submit">Guardar cambios</button><br><br>
         </form><?
