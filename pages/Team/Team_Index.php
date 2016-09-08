@@ -694,6 +694,7 @@ class Team_Index implements PublicSection
         $losses = [];
 
         foreach($teamMatches as $match) {
+            if (!$match->isPublished()) continue;
             // $games[$match->seasonid]++;
             if ($match->getWinner() == $this->team->teamid) {
                 $playedGames[$match->seasonid]++;
