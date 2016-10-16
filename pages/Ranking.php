@@ -47,6 +47,13 @@ class Ranking implements PublicSection
         $playoffsDefeat = [];
         $playoffsLast = [];
 
+        foreach($this->season->getTeams() as $team) {
+            $wins[$team->teamid] = 0;
+            $kills[$team->teamid] = 0;
+            $games[$team->teamid] = 0;
+            $deaths[$team->teamid] = 0;
+        }
+
         foreach($matches as $match) {
             if ($match->week > $this->season->mainweeks) continue;
             if (!$this->season->weekIsPublished($match->week)) continue;

@@ -130,7 +130,7 @@ class BetsRanking implements PublicSection
                          * @var $match Match
                          */
                         $match = $matches[$bet->matchid];
-                        if (!$match->isPublished()) continue;
+                        if (!$match->isPublished() || $match->isDelayed()) continue;
 
                         $team1 = $teams[$match->team1id];
                         $team2 = $teams[$match->team2id];
