@@ -22,8 +22,10 @@ class Season_Index implements PublicSection {
         $maxWeekMatch = Match::findOne('seasonid = ? order by week desc limit 1', [$this->season->seasonid]);
         $this->maxWeek = $maxWeekMatch->week;
 
-        while(!$this->season->weekIsPublic($this->maxWeek)) {
-            $this->maxWeek--;
+        if (!Team::isMember()) {
+            while (!$this->season->weekIsPublic($this->maxWeek)) {
+                $this->maxWeek--;
+            }
         }
 
         if ($requestedWeek && $requestedWeek <= $this->maxWeek) {
