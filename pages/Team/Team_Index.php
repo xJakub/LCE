@@ -91,17 +91,17 @@ class Team_Index implements PublicSection
             <a href="https://twitter.com/<?=$this->team->username?>" target="_blank">@<?=$this->team->username?></a>
             <div style="height: 6px"></div>
 
-            <span style="text-decoration: underline;">Color oficial</span>: <?
+            <span style="text-decoration: underline;">Color oficial</span>: <?php
             if (preg_match("'^#[abcdefABCDEF0-9]{6}$'", $color)) {
-                ?><span id="teamcolor"><?= $color ?></span><?
+                ?><span id="teamcolor"><?= $color ?></span><?php
             } else {
-                ?><i id="teamcolor">Sin color</i><?
+                ?><i id="teamcolor">Sin color</i><?php
                 $color = '#000000';
             }
             ?>
             <div class="teamcolor" style="background: <?=$color?>"></div>
 
-            <br><?
+            <br><?php
             if ($this->team->isManager()) {
                 ?>
                 <br>Eres el Manager del equipo.
@@ -110,7 +110,7 @@ class Team_Index implements PublicSection
                     <input type="hidden" name="color" value="<?=$color?>">
                     <input type="hidden" name="csrf" value="<?=$csrf?>">
                 </form>
-                <?
+                <?php
                 $this->design->addJavaScript('/js/jquery-ui.min.js');
                 $this->design->addStyleSheet('/css/jquery-ui.min.css');
                 $this->design->addStyleSheet('/css/jquery.colorpicker.css');
@@ -132,7 +132,7 @@ class Team_Index implements PublicSection
             ?>
         </div>
         <div class="inblock">
-            <?
+            <?php
 
             ?>
             <h2>Calendario de enfrentamientos</h2>
@@ -147,7 +147,7 @@ class Team_Index implements PublicSection
                 </tr>
                 </thead>
                 <tbody>
-                <? foreach(Match::find('(team1id = ? or team2id = ?) and seasonid = ? order by week asc',
+                <?php foreach(Match::find('(team1id = ? or team2id = ?) and seasonid = ? order by week asc',
                     [$this->team->teamid, $this->team->teamid, $this->season->seasonid]) as $match) {
 
                     if (!$this->team->isManager() && !$this->season->weekIsPublic($match->week)) {
@@ -175,7 +175,7 @@ class Team_Index implements PublicSection
                     ?>
                     <tr>
                         <td style="height:3em">
-                            <?
+                            <?php
                             echo $this->season->getWeekName($match->week);
                             ?>
                         </td>
@@ -190,14 +190,14 @@ class Team_Index implements PublicSection
                             </a>
                         </td>
                         <td>
-                            <i style="color: #666" <? if ($this->team->isManager()) { ?>class="editableResult"<?}?>>
+                            <i style="color: #666" <?php if ($this->team->isManager()) { ?>class="editableResult"<?php}?>>
                                 <?= ($this->team->isManager() || $match->isPublished()) ? $resultNames[$match->result][$posIndex] : $resultNames[0][0] ?>
                             </i>
 
                             <form class="editResult" method="POST" action="<?=HTMLResponse::getRoute()?>">
                                 <select name="result">
-                                    <? foreach($resultNames as $index => $names) {
-                                        ?><option <?=($index==$match->result?'selected':'')?> value="<?=$index?>"><?=$names[$posIndex]?></option><?
+                                    <?php foreach($resultNames as $index => $names) {
+                                        ?><option <?=($index==$match->result?'selected':'')?> value="<?=$index?>"><?=$names[$posIndex]?></option><?php
                                     } ?>
                                 </select>
                                 <input type="hidden" name="matchid" value="<?=$match->matchid?>">
@@ -205,15 +205,15 @@ class Team_Index implements PublicSection
 
                         </td>
                         <td>
-                            <? $this->showMatchVideo($this->team, $match, 2, "Ver Team Preview") ?>
-                            <? $this->showMatchVideo($this->team, $match, 1, "Ver Combate") ?>
+                            <?php $this->showMatchVideo($this->team, $match, 2, "Ver Team Preview") ?>
+                            <?php $this->showMatchVideo($this->team, $match, 1, "Ver Combate") ?>
 
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
                 </tbody>
             </table>
-            <?
+            <?php
             $this->showFriendlyMatches();
 
             if ($this->team->isManager()) {
@@ -241,28 +241,28 @@ class Team_Index implements PublicSection
                     </tr>
                     </thead>
 
-                    <? foreach($sanctions as $sanction) { ?>
+                    <?php foreach($sanctions as $sanction) { ?>
                         <tr>
                             <!-- <td style="font-style: italic">
                                 <?= date("Y-m-d H:i:s", $sanction->dateline) ?>
                             </td> -->
                             <td>
                                 <?= $sanctionLevels[$sanction->level] ?>
-                                <? if (Team::isAdmin()) { ?>
+                                <?php if (Team::isAdmin()) { ?>
                                     <i style="color: #666">
                                         por
                                     </i>
                                     <?= htmlentities($sanction->adminname) ?>
-                                <? } ?>
+                                <?php } ?>
                             </td>
                             <td>
                                 <?= htmlentities($sanction->reason) ?>
                             </td>
                         </tr>
-                    <? } ?>
+                    <?php } ?>
                 </table><br>
 
-                <?
+                <?php
             }
 
             if (Team::isAdmin()) {
@@ -298,11 +298,11 @@ class Team_Index implements PublicSection
                         <tr>
                             <td>
                                 <select name="sanctionlevel">
-                                    <? foreach ($sanctionLevels as $index => $label) { ?>
+                                    <?php foreach ($sanctionLevels as $index => $label) { ?>
                                         <option value="<?=$index?>">
                                             <?= $label ?>
                                         </option>
-                                    <? } ?>
+                                    <?php } ?>
                                 </select>
                             </td>
                             <td>
@@ -314,13 +314,13 @@ class Team_Index implements PublicSection
                     <div style="height: 6px"></div>
                     <button type="submit">Añadir sanción</button>
                 </form>
-                <?
+                <?php
             } ?><br>
-            <?
+            <?php
             $this->showTeamSeasons();
             ?>
         </div>
-        <?
+        <?php
     }
 
     /**
@@ -382,7 +382,7 @@ class Team_Index implements PublicSection
                     <input type="hidden" name="label" value="<?=$label?>">
                 </form>
             </div>
-            <?
+            <?php
         } else if ($video && $isManager) {
             ?>
             <div style="white-space: nowrap">
@@ -396,10 +396,10 @@ class Team_Index implements PublicSection
                     <input type="hidden" name="label" value="<?=$label?>">
                 </form>
             </div>
-            <?
+            <?php
         }
         else if ($video && ($type != 1 || $match->isPublished())) {
-            ?><a href="<?=htmlentities($video->link)?>" target="_blank"><?= $label ?></a><br><?
+            ?><a href="<?=htmlentities($video->link)?>" target="_blank"><?= $label ?></a><br><?php
         }
 
     }
@@ -409,7 +409,7 @@ class Team_Index implements PublicSection
         ?>
         <h2>Editar jugadores iniciales</h2>
         <div class="inblock" style="display: inline-block; text-align: left">
-        <?
+        <?php
         for ($i=1; $i<=$this->season->teamplayers; $i++) {
             $player = Player::findOne('teamid = ? and number = ? and seasonid = ?',
                 [$this->team->teamid, $i, $this->season->seasonid]);
@@ -424,23 +424,23 @@ class Team_Index implements PublicSection
                 </div>
                 <select name="name" onchange="$(this).closest('form').submit()">
                     <option value="">-- Elige Pokémon --</option>
-                    <?
+                    <?php
                     foreach(Player::getAvailable() as $sprite) {
                         ?>
                         <option <?=$pname==$sprite?'selected':''?> value="<?=htmlentities($sprite)?>">
                             <?= htmlentities(ucwords($sprite)) ?>
                         </option>
-                        <?
+                        <?php
                     }
                     ?>
                 </select>
                 <input type="hidden" name="number" value="<?=$i?>">
             </form>
             <div style="margin-bottom: 6px"></div>
-            <?
+            <?php
         }
         ?>
-        </div><?
+        </div><?php
     }
 
     private function showPlayers()
@@ -453,11 +453,11 @@ class Team_Index implements PublicSection
 
         ?>
         <h2>Jugadores iniciales</h2>
-        <? for ($y=0; $y*3 < $this->season->teamplayers; $y++) {
+        <?php for ($y=0; $y*3 < $this->season->teamplayers; $y++) {
         ?><table>
         <thead>
         <tr>
-            <?
+            <?php
             $colspan = 1;
             for ($x=0; $x<3; $x++) {
                 if ($x != 2 && ($this->tiers[$y*3 + $x] == $this->tiers[$y*3 + $x + 1])) {
@@ -468,12 +468,12 @@ class Team_Index implements PublicSection
                     <td colspan="<?=$colspan?>">
                         <?= $this->tiers[$y*3 + $x] ?>
                     </td>
-                    <?
+                    <?php
                     $colspan = 1;
                 }
             } ?>
         </tr>
-        </thead><tr><?
+        </thead><tr><?php
             for ($x=0; $x<3; $x++) {
                 $number = $y*3 + $x + 1;
                 $player = $playersByNumber[$number];
@@ -482,7 +482,7 @@ class Team_Index implements PublicSection
                 ?>
                 <td>
                     <div style="width: 144px">
-                        <? if ($player) { ?>
+                        <?php if ($player) { ?>
                             <div class="inblock middle" style="text-align: center">
                                 <a href="<?=$infoLink?>" target="_blank" title="Ver en Smogon">
                                     <img src="/img/sprites/<?= $player->name ?>.png">
@@ -491,19 +491,19 @@ class Team_Index implements PublicSection
                             <a href="<?=$infoLink?>" target="_blank" title="Ver en Smogon">
                                 <b><?= ucwords($player->name) ?></b>
                             </a>
-                        <? } else { ?>
+                        <?php } else { ?>
                             <div class="inblock middle" style="text-align: center">
                                 <div style="width:100px; height:100px"
                             </div><br>
-                        <? } ?>
+                        <?php } ?>
                     </div>
                 </td>
-                <?
+                <?php
             }
             ?></tr></table>
-        <div style="height: 6px"></div><?
+        <div style="height: 6px"></div><?php
     } ?>
-        <?
+        <?php
     }
 
     private function checkPlayerChanges()
@@ -603,9 +603,9 @@ class Team_Index implements PublicSection
         if ($videos || $this->team->isManager()) {
             ?>
             <h2>Combates amistosos</h2>
-            <? if ($this->team->isManager()) { ?>
+            <?php if ($this->team->isManager()) { ?>
                 <form action="<?=HTMLResponse::getRoute()?>" method="post">
-            <? } ?>
+            <?php } ?>
             <table>
                 <thead>
                 <tr>
@@ -615,7 +615,7 @@ class Team_Index implements PublicSection
                     <td>Vídeo</td>
                 </tr>
                 </thead>
-                <? foreach($videos as $video) {
+                <?php foreach($videos as $video) {
                     if (!$this->team->isManager() &&
                         ($video->publishdate > date('Y-m-d') ||
                             ($video->publishdate == date('Y-m-d') && $video->publishtime > date('H:i')))) {
@@ -634,15 +634,15 @@ class Team_Index implements PublicSection
                             <a href="<?=htmlentities($video->link)?>" target="_blank">
                                 Ver combate
                             </a>
-                            <? if ($this->team->isManager()) { ?>
+                            <?php if ($this->team->isManager()) { ?>
                                 <a style="font-size: 10px" href="javascript:void(0)" onclick="removeFriendlyVideo(this, <?=$video->videoid?>)">
                                     (Quitar)
                                 </a>
-                            <? } ?>
+                            <?php } ?>
                         </td>
                     </tr>
-                <? } ?>
-                <? if ($this->team->isManager()) { ?>
+                <?php } ?>
+                <?php if ($this->team->isManager()) { ?>
                     <tr>
                         <td>
                             <input type="date" name="friendlydate" placeholder="<?=date('Y-m-d')?>" style="width:80px">
@@ -653,14 +653,14 @@ class Team_Index implements PublicSection
                         <td>
                             <select name="friendlyopponentsid">
                                 <option value="">-- Elige oponentes --</option>
-                                <?
+                                <?php
                                 foreach($this->season->getTeams() as $team) {
                                     if ($team->teamid == $this->team->teamid) continue;
                                     ?>
                                     <option value="<?=$team->teamid?>">
                                         <?= htmlentities($team->name) ?>
                                     </option>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                             </select>
@@ -669,15 +669,15 @@ class Team_Index implements PublicSection
                             <input name="friendlyurl" placeholder="http://youtube.com/..." style="width:200px">
                         </td>
                     </tr>
-                <? } ?>
+                <?php } ?>
             </table>
-            <? if ($this->team->isManager()) { ?>
+            <?php if ($this->team->isManager()) { ?>
                 <div style="height: 6px"></div>
                 <button type="submit">Añadir amostoso</button>
                 <input type="hidden" name="friendlycsrf" value="<?=$csrf?>">
                 <input type="hidden" name="removeid" value="">
                 </form>
-            <? }
+            <?php }
         }
     }
 
@@ -716,7 +716,7 @@ class Team_Index implements PublicSection
             <td>Victorias</td>
             <td>Derrotas</td>
         </tr></thead>
-        <?
+        <?php
         foreach($teamSeasons as $season) {
             if (!$season->ispublic && !Team::isSuperAdmin()) continue;
             ?>
@@ -730,9 +730,9 @@ class Team_Index implements PublicSection
                 <td><?= $wins[$season->seasonid] * 1 ?></td>
                 <td><?= $losses[$season->seasonid] * 1 ?></td>
             </tr>
-            <?
+            <?php
         }
-        ?></table><br><?
+        ?></table><br><?php
 
     }
 }

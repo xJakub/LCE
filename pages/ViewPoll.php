@@ -47,7 +47,7 @@ class ViewPoll implements PublicSection
             <a href="<?=HTMLResponse::getRoute()?>?authenticate=1">
                 Inicia sesión.
             </a><br>
-            <?
+            <?php
             return;
         }
         else {
@@ -89,7 +89,7 @@ class ViewPoll implements PublicSection
                     <td>Lista de opciones</td>
                 </tr>
                 </thead>
-                <?
+                <?php
 
                 foreach($options as $index => $option) {
                     ?>
@@ -107,21 +107,21 @@ class ViewPoll implements PublicSection
                                 </div>
                             </div>
                             <div class="inblock middle">
-                                <? if (!$hasAnswered) { ?>
+                                <?php if (!$hasAnswered) { ?>
                                     <a href="<?=HTMLResponse::getRoute()?>?vote=<?=$option->polloptionid?>&hash=<?=$option->getHash()?>" onclick="return confirm('¿Votas <?=htmlentities($option->title)?>?')">
                                         Votar esta opción
                                     </a>
-                                <? } else if ($answer->polloptionid == $option->polloptionid) { ?>
+                                <?php } else if ($answer->polloptionid == $option->polloptionid) { ?>
                                     <i>Votaste esta opción</i>
-                                <? } ?>
+                                <?php } ?>
                             </div>
                             <div class="onmore" style="display: none; padding: 12px">
                                 <?= $option->description ?>
                             </div>
                             <div style="height: 6px"></div>
-                            <?
+                            <?php
                             if (!$hasAnswered) {
-                                ?><i>Vota primero para ver los resultados</i><?
+                                ?><i>Vota primero para ver los resultados</i><?php
                             }
                             else {
                                 $optionAnswers = $answers[$option->polloptionid];
@@ -129,15 +129,15 @@ class ViewPoll implements PublicSection
                                 Votado por: <?= $optionAnswers
                                     ? '<b>'.implode(', ', Model::pluck($optionAnswers, 'username')).'</b> ('.count($optionAnswers).' votos)'
                                     : '<i>Nadie</i>'; ?>
-                                <?
+                                <?php
                             }
                             ?>
                             <div style="height: 6px"></div>
                         </td></tr>
-                    <?
+                    <?php
                 }
 
-                ?></table></div><br><br><?
+                ?></table></div><br><br><?php
         }
     }
 }

@@ -46,6 +46,6 @@ class Admin_Index implements PublicSection
                 <li><a href="/admin/temporadas/">Administrar temporadas</a></li>
             </ul>
         </div>
-        <?
+        <?php
     }
 }

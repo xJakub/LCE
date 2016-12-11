@@ -63,7 +63,7 @@ class Admin_Seasons implements PublicSection
                 <td>Acciones</td>
             </tr>
             </thead>
-            <?
+            <?php
             foreach(Season::find('1=1') as $season) {
                 ?>
                 <tr>
@@ -85,7 +85,7 @@ class Admin_Seasons implements PublicSection
                         </a>
                     </td>
                 </tr>
-                <?
+                <?php
             }
             ?>
         </table><br>
@@ -94,6 +94,6 @@ class Admin_Seasons implements PublicSection
             <input type="hidden" name="csrf" value="<?=$csrf?>">
             <button type="submit">Añadir nueva temporada</button>
         </form><br>
-        <?
+        <?php
     }
 }

@@ -84,7 +84,7 @@ class Admin_Season_Weeks implements PublicSection
                 </tr>
             </table>
 
-            <?
+            <?php
             $teams = $this->season->getTeams(false);
             $maxMatches = ceil(count($teams)/2);
 
@@ -172,7 +172,7 @@ class Admin_Season_Weeks implements PublicSection
                             <input name="week<?=$week?>date" type="date" value="<?=htmlentities($this->season->getWeekDate($week))?>">
                         </td>
                     </tr>
-                    <?
+                    <?php
                     for ($i=0; $i<$maxMatches; $i++) {
                         ?>
                         <tr>
@@ -182,7 +182,7 @@ class Admin_Season_Weeks implements PublicSection
                             <td>
                                 <select name="week<?=$week?>match<?=$i?>team1id">
                                     <option value="0">-- Elige equipo --</option>
-                                    <?
+                                    <?php
                                     foreach($teams as $team) {
                                         $selected = isset($matches[$week][$i])
                                             ? (
@@ -195,14 +195,14 @@ class Admin_Season_Weeks implements PublicSection
                                         <option value="<?=$team->teamid?>" <?=$selected?>>
                                             <?=htmlentities($team->name)?>
                                         </option>
-                                        <?
+                                        <?php
                                     }
                                     ?>
                                 </select>
                                 VS
                                 <select name="week<?=$week?>match<?=$i?>team2id">
                                     <option value="0">-- Elige equipo --</option>
-                                    <?
+                                    <?php
                                     foreach($teams as $team) {
                                         $selected = isset($matches[$week][$i])
                                             ? (
@@ -215,17 +215,17 @@ class Admin_Season_Weeks implements PublicSection
                                         <option value="<?=$team->teamid?>" <?=$selected?>>
                                             <?=htmlentities($team->name)?>
                                         </option>
-                                        <?
+                                        <?php
                                     }
                                     ?>
                                 </select>
                             </td>
                         </tr>
-                        <?
+                        <?php
                     }
                     ?>
                 </table>
-                <?
+                <?php
             }
             ?>
 
@@ -233,6 +233,6 @@ class Admin_Season_Weeks implements PublicSection
             <button type="submit">Guardar cambios</button><br><br>
 
         </form>
-        </div><?
+        </div><?php
     }
 }

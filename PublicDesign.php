@@ -156,7 +156,7 @@ class PublicDesign extends HTMLResponse
                                 <option value="<?=$season->getLink()?>" <?=$selected?>>
                                     <?=htmlentities($season->name)?>
                                 </option>
-                            <? } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>

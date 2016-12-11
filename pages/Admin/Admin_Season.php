@@ -132,16 +132,16 @@ class Admin_Season implements PublicSection
                 </tr>
                 </thead>
                 <tr>
-                    <?
+                    <?php
                     $playerNames = $this->season->getPlayerNames();
 
                     for ($i=0; $i<$this->season->teamplayers; $i++) {
                     if ($i > 0 && ($i % 3) == 0) {
-                    ?></tr><tr><?
+                    ?></tr><tr><?php
                     }
                     ?><td style="padding: 6px">
                         <input name="player<?=$i?>name" placeholder="Jugador <?=$i+1?>" value="<?=htmlentities($playerNames[$i])?>">
-                    </td><?
+                    </td><?php
                     }
                     ?>
                 </tr>
@@ -155,7 +155,7 @@ class Admin_Season implements PublicSection
                     <td>Opciones</td>
                 </tr>
                 </thead>
-                <?
+                <?php
 
 
                 if ($csrf == $postCsrf) {
@@ -215,7 +215,7 @@ class Admin_Season implements PublicSection
                             <input type="checkbox" name="remove<?=$team->teamid?>"> Eliminar
                         </td>
                     </tr>
-                    <?
+                    <?php
                 }
                 ?>
                 <tr>
@@ -225,12 +225,12 @@ class Admin_Season implements PublicSection
                     <td>
                         <select name="newteamid">
                             <option>-- Elige nuevo equipo --</option>
-                            <?
+                            <?php
                             foreach(Team::find('1=1 order by name asc') as $team) {
                                 if ($teamsById[$team->teamid]) continue;
                                 ?><option value="<?=$team->teamid?>">
                                 <?=htmlentities($team->name)?> (@<?=$team->username?>)
-                                </option><?
+                                </option><?php
                             }
                             ?>
                         </select>
@@ -243,6 +243,6 @@ class Admin_Season implements PublicSection
             <button type="submit">Guardar cambios</button><br><br>
 
         </form>
-        </div><?
+        </div><?php
     }
 }

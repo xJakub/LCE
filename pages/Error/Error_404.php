@@ -35,6 +35,6 @@ class Error_404 implements PublicSection {
      */
     public function show()
     {
-        ?>Pta bida :(<?
+        ?>Pta bida :(<?php
     }
 }

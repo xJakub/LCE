@@ -87,48 +87,48 @@ class Season_Index implements PublicSection {
                 <?= date('j', $publishTime)?> de <?= $months[date('m', $publishTime)-1] ?> de <?= date('Y', $publishTime) ?>,
                 <?= date('H:i', $publishTime) ?> (hora española)
             </div>
-        <? } ?>
+        <?php } ?>
         <div style="height: 6px"></div>
         <table style="border: 0; padding: 0; margin: 0; width: 100%">
             <tr>
                 <td style="width: 150px; border: 0; padding: 0; margin: 0; text-align: left">
-                    <?
+                    <?php
                     if ($this->week > 1) {
                         ?>
                         <a style="float:left; margin-left: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week-1?>/">
                             &lt;&lt;
                             Ver <?= strtolower($this->season->getWeekName($this->week-1)) ?>
                         </a>
-                        <?
+                        <?php
                     }
                     ?>
                 </td>
                 <td style="border: 0; padding: 0; margin: 0; text-align: center">
-                    <?
+                    <?php
                     if (time() >= $publishTime) {
                         ?>
                         <a href="javascript:void(0)" onclick="$('._grayscale').toggleClass('grayscale'); $('.result').toggle(); $(this).find('span').toggle()">
                             <span>Mostrar resultados</span>
                             <span style="display: none">Ocultar resultados</span>
                         </a>
-                        <?
+                        <?php
                     }
                     ?>
                 </td>
-                <td style="width: 150px; border: 0; padding: 0; margin: 0; text-align: right"><?
+                <td style="width: 150px; border: 0; padding: 0; margin: 0; text-align: right"><?php
                     if ($this->week < $this->maxWeek) {
                         ?>
                         <a style="float:right; margin-right: 24px" href="/<?=$this->season->getLink()?>/jornadas/<?=$this->week+1?>/">
                             Ver <?= strtolower($this->season->getWeekName($this->week+1)) ?>
                             &gt;&gt;
                         </a>
-                        <?
+                        <?php
                     }
                     ?>
                 </td>
             </tr>
         </table>
-        <?
+        <?php
 
         $matches = Match::find('seasonid = ? and week = ? order by matchid asc', [$this->season->seasonid, $week]);
         #shuffle($matches);
@@ -136,7 +136,7 @@ class Season_Index implements PublicSection {
         if (!$matches) {
             ?>
             No hay enfrentamientos disponibles en estos momentos.<br><br>
-            <?
+            <?php
             return;
         }
 
@@ -187,26 +187,26 @@ class Season_Index implements PublicSection {
             ?>
 
             <div class="matchbox">
-                <? $this->showTeamBox($match, $team1, $team1votes, $votesCount) ?>
+                <?php $this->showTeamBox($match, $team1, $team1votes, $votesCount) ?>
                 <div class="vsbox">
-                    <? if ($match->isPublished() && $match->getWinner()) {
+                    <?php if ($match->isPublished() && $match->getWinner()) {
                         $score1 = $team1->teamid==$match->getWinner() ? 6-$match->getLooserKills() : 0;
                         $score2 = $team2->teamid==$match->getWinner() ? 6-$match->getLooserKills() : 0;
                         ?>
                         <div style="font-size:90%; display: none" class="result">
                             <?=$score1?>-<?=$score2?>
                         </div>
-                        <?
+                        <?php
                     } else if ($match->isPublished() && $match->isDelayed()) { ?>
                         <div style="font-size:90%; display: none" class="result">
                             Apl.
                         </div>
-                    <? } ?>
+                    <?php } ?>
                     VS
                 </div>
-                <? $this->showTeamBox($match, $team2, $team2votes, $votesCount) ?>
+                <?php $this->showTeamBox($match, $team2, $team2votes, $votesCount) ?>
             </div>
-            <?
+            <?php
         }
     }
 
@@ -234,16 +234,16 @@ class Season_Index implements PublicSection {
         ?>
         <div class="teambox">
             <div class="votecount"><?=$team1votes?> votos (<?=$team1per?>%)</div>
-            <? if ($canVote) { ?>
-                <? if (TwitterAuth::isLogged()) { ?>
-                    <? if (!$match->hasVoted()) { ?>
+            <?php if ($canVote) { ?>
+                <?php if (TwitterAuth::isLogged()) { ?>
+                    <?php if (!$match->hasVoted()) { ?>
 
                         <form method="post" action="<?=HTMLResponse::getRoute()?>">
                             <button type="submit" class="vote">Votar</button>
                             <input type="hidden" name="teamid" value="<?=$team->teamid?>">
                             <input type="hidden" name="matchid" value="<?=$match->matchid?>">
                         </form>
-                    <? } else if ($match->hasVoted() == $team->teamid) { ?>
+                    <?php } else if ($match->hasVoted() == $team->teamid) { ?>
                         <form method="post" action="<?=HTMLResponse::getRoute()?>">
                             <div class="login">
                                 <button type="submit">Quitar voto</button>
@@ -254,31 +254,31 @@ class Season_Index implements PublicSection {
                             <input type="hidden" name="unteamid" value="<?=$team->teamid?>">
                             <input type="hidden" name="unmatchid" value="<?=$match->matchid?>">
                         </form>
-                    <? } ?>
-                <? } else { ?>
+                    <?php } ?>
+                <?php } else { ?>
                     <a href="<?= HTMLResponse::getRoute() ?>?authenticate=1" class="login">&iexcl;Usa Twitter para votar!</a>
-                <? } ?>
-            <? } else { ?>
-                <? if (TwitterAuth::isLogged()) { ?>
-                    <? if (!$match->isPublished() || !$match->getWinner()) { ?>
-                        <? if ($match->hasVoted() == $team->teamid) { ?>
+                <?php } ?>
+            <?php } else { ?>
+                <?php if (TwitterAuth::isLogged()) { ?>
+                    <?php if (!$match->isPublished() || !$match->getWinner()) { ?>
+                        <?php if ($match->hasVoted() == $team->teamid) { ?>
                             <span class="login">Has votado por este equipo</span>
-                        <? } ?>
-                    <? } else if ($video) { ?>
+                        <?php } ?>
+                    <?php } else if ($video) { ?>
                         <a class="login" href="<?=htmlentities($video->link)?>" target="_blank">
                             Ver combate
                         </a>
-                    <? } ?>
-                <? } else if (!$match->isPublished()) { ?>
+                    <?php } ?>
+                <?php } else if (!$match->isPublished()) { ?>
                     <a href="<?= HTMLResponse::getRoute() ?>?authenticate=1" class="login">&iexcl;Entra para ver tus votos!</a>
-                <? } else if ($video) { ?>
+                <?php } else if ($video) { ?>
                     <a class="login" href="<?=htmlentities($video->link)?>" target="_blank">
                         Ver combate
                     </a>
-                <? } ?>
-            <? } ?>
+                <?php } ?>
+            <?php } ?>
             <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><img class="<?=$isGray?'_grayscale':''?>" src="/<?=$team->getImageLink(200, 150)?>"></a>
         </div>
-        <?
+        <?php
     }
 }

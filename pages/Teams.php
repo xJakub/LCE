@@ -44,8 +44,8 @@ class Teams implements PublicSection {
                 <a class="login" href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><?=htmlentities($team->name)?></a>
                 <a href="/<?=$this->season->getLink()?>/equipos/<?=$team->getLink()?>/"><img src="/<?=$team->getImageLink(200, 150)?>"></a>
             </div>
-            <?
+            <?php
         }
-        ?><br><br><?
+        ?><br><br><?php
     }
 }

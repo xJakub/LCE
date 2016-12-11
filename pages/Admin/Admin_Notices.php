@@ -39,20 +39,20 @@ class Admin_Notices implements PublicSection
             HTMLResponse::exitWithRoute('/');
         }
         if (!TwitterAuth::getBotConfig()) {
-            ?>Error: el bot no está configurado<br><?
+            ?>Error: el bot no está configurado<br><?php
             return;
             }
 
         if (HTMLResponse::fromPOST('csrf', '') && strlen(trim(HTMLResponse::fromPOST('message','')))) {
             if ($_SESSION['csrf'] != HTMLResponse::fromPOST('csrf', '')) {
-                ?>Error: código de seguridad incorrecto.<br><br><?
+                ?>Error: código de seguridad incorrecto.<br><br><?php
             }
             else {
                 $message = HTMLResponse::fromPOST('message');
                 ?>
                 <b>Mensaje</b>: <?=htmlentities($message)?><br><br>
 
-<?
+<?php
                 foreach(Team::find('ismember order by username asc') as $team) {
                     $lowname = strtolower($team->username);
                     if (HTMLResponse::fromPOST("check{$lowname}", '')) {
@@ -63,10 +63,10 @@ class Admin_Notices implements PublicSection
                         ?>-<?=$team->username?>:
                         <?= $ok?'Enviado correctamente':'Error en el envío' ?>
                         <br>
-                        <?
+                        <?php
                     }
                 }
-                ?><br><br><?
+                ?><br><br><?php
                 return;
             }
         }
@@ -85,7 +85,7 @@ class Admin_Notices implements PublicSection
                     seleccionar todos
                 </a>
                 ):</b><br>
-            <?
+            <?php
             foreach(Team::find('ismember order by username asc') as $team) {
                 $lowname = strtolower($team->username);
                 ?>
@@ -102,11 +102,11 @@ class Admin_Notices implements PublicSection
                         </label>
                     </div>
                 </div>
-                <?
+                <?php
             }
             ?></div><br>
             <input type="hidden" name="csrf" value="<?= $csrf ?>">
             <button type="submit">Enviar comunicado</button>
-        </form><br><br><?
+        </form><br><br><?php
     }
 }

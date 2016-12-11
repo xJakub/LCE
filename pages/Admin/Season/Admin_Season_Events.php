@@ -83,7 +83,7 @@ class Admin_Season_Events implements PublicSection
                     <td>Enlace</td>
                 </tr>
                 </thead>
-                <? foreach($events as $index => $event) {
+                <?php foreach($events as $index => $event) {
                     $key = ($index == count($events)-1) ? 'placeholder' : 'value';
                     ?>
                     <tr>
@@ -97,7 +97,7 @@ class Admin_Season_Events implements PublicSection
                             <input style="width: 250px" name="link<?=$index?>" <?=$key?>="<?=htmlentities($event[2])?>">
                         </td>
                     </tr>
-                    <?
+                    <?php
                 } ?>
             </table><br>
 
@@ -105,6 +105,6 @@ class Admin_Season_Events implements PublicSection
             <button type="submit">Guardar cambios</button><br><br>
 
         </form>
-        </div><?
+        </div><?php
     }
 }

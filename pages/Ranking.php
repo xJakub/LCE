@@ -138,7 +138,7 @@ class Ranking implements PublicSection
                 <td>Perdidos</td>
             </tr></thead>
 
-            <?
+            <?php
             /**
              * @var $teams Team[]
              */
@@ -155,12 +155,12 @@ class Ranking implements PublicSection
                 ?>
                 <tr>
                     <td><?= $lastPos+1 ?>º
-                        <? if (isset($mainPositions[$teamid]) && $lastPos != $mainPositions[$teamid]) { ?>
+                        <?php if (isset($mainPositions[$teamid]) && $lastPos != $mainPositions[$teamid]) { ?>
                             <div style="height: 4px"></div>
                             <i title="<?= $mainPositions[$teamid]+1 ?>º en las jornadas" style="cursor: pointer; color: #666">
                                 <?= $mainPositions[$teamid]+1 ?>º
                             </i>
-                        <? } ?>
+                        <?php } ?>
                     </td>
                     <td style="text-align: left">
                         <div class="teamimg64">
@@ -175,11 +175,11 @@ class Ranking implements PublicSection
                     <td><?= $kills[$teamid] ?></td>
                     <td><?= $deaths[$teamid] ?></td>
                 </tr>
-                <?
+                <?php
                 $lastTiebreakers = $tiebreakers[$teamid];
             }
             ?>
         </table>
-        <?
+        <?php
     }
 }

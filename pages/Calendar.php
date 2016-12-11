@@ -103,13 +103,13 @@ class Calendar implements PublicSection
                         </tr>
                         </thead>
                         <tr>
-                            <?
+                            <?php
 
                             $monthDays = date('t', $time);
                             $columns = (date('w', $time) + 6) % 7;
 
                             if ($columns) {
-                                ?><td style="" colspan="<?= $columns ?>"></td><?
+                                ?><td style="" colspan="<?= $columns ?>"></td><?php
                             }
 
                             for ($d=1; $d<=$monthDays; $d++) {
@@ -119,7 +119,7 @@ class Calendar implements PublicSection
                             if ($d != 1 && $weekDay == 1) {
                             ?>
                         </tr><tr>
-                            <?
+                            <?php
                             }
 
                             $dayEvents = [];
@@ -140,32 +140,32 @@ class Calendar implements PublicSection
                                 </div>
                                 <div class="inblock middle">
                                     <div style="text-align: center; min-width: 48px; margin: 6px 0px">
-                                        <?
+                                        <?php
                                         if (!$dayEvents) echo "&nbsp;";
                                         foreach($dayEvents as $event) { ?>
-                                            <? if (!$event[1]) { ?>
+                                            <?php if (!$event[1]) { ?>
                                                 <?= $event[0] ?><br>
-                                            <? } else { ?>
+                                            <?php } else { ?>
                                                 <a href="<?=$event[1]?>">
                                                     <?= $event[0] ?><br>
                                                 </a>
-                                            <? } ?>
-                                        <? } ?>
+                                            <?php } ?>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </td>
-                            <?
+                            <?php
                             }
 
                             $columns = 6 - ((date('w', $dayTime) + 6) % 7);
                             if ($columns) {
-                                ?><td style="" colspan="<?= $columns ?>"></td><?
+                                ?><td style="" colspan="<?= $columns ?>"></td><?php
                             }
                             ?>
                         </tr>
                     </table>
                 </div>
-                <?
+                <?php
 
                 if (++$month == 13) {
                     $month = 1;

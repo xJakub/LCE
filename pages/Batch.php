@@ -72,10 +72,10 @@ class Batch implements PublicSection
             Team::truncate(true);
             Match::truncate(true);
             Model::saveAll($teams);
-            ?>Equipos actualizados.<br><?
+            ?>Equipos actualizados.<br><?php
         }
         else {
-            ?>No hay cambios en los equipos.<br><?
+            ?>No hay cambios en los equipos.<br><?php
         }
     }
 
@@ -116,10 +116,10 @@ class Batch implements PublicSection
         if (count($matches) >= 1 && count($matches) != count(Match::find('1=1'))) {
             Match::truncate(true);
             Model::saveAll($matches);
-            ?>Enfrentamientos actualizados.<br><?
+            ?>Enfrentamientos actualizados.<br><?php
         }
         else {
-            ?>No hay cambios en los enfrentamientos.<br><?
+            ?>No hay cambios en los enfrentamientos.<br><?php
         }
 
     }

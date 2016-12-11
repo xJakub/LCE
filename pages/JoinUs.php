@@ -43,7 +43,7 @@ class JoinUs implements PublicSection
                 Ya estás en la LCE.
             </div>
 
-            <?
+            <?php
             if (!Team::isAdmin()) return;
 
             $orders = ['dateline' => 'Ordenar por fecha', 'score' => 'Ordenar por puntuación'];
@@ -56,13 +56,13 @@ class JoinUs implements PublicSection
             ?>
             <form action="<?=HTMLResponse::getRoute()?>" method="get">
                 <select name="order" onchange="$(this).parent().submit()">
-                    <?
+                    <?php
                     foreach($orders as $orderType => $orderLabel) {
                         ?>
                         <option value="<?=$orderType?>" <?=$order == $orderType ? 'selected' : ''?>>
                             <?=$orderLabel?>
                         </option>
-                        <?
+                        <?php
                     }
                     ?>
                 </select>
@@ -76,7 +76,7 @@ class JoinUs implements PublicSection
                     <td>Lista de solicitudes</td>
                 </tr>
                 </thead>
-                <?
+                <?php
                 $applications = Application::find("1=1 order by dateline desc");
 
                 if ($order == 'score') {
@@ -144,13 +144,13 @@ class JoinUs implements PublicSection
                             </div>
 
                             <div class="inblock middle" style="width: 120px; font-size:85%">
-                                <?
+                                <?php
                                 if (!$ownVotes[$application->applicationid]) {
                                     ?>
                                     <a href="javascript:void(0)" onclick="showApplicationVote(this)">
                                         No has votado
                                     </a>
-                                    <?
+                                    <?php
                                 }
                                 else {
                                     ?>
@@ -158,20 +158,20 @@ class JoinUs implements PublicSection
                                         Has votado<br>
                                         <b><?= $voteNames[$ownVotes[$application->applicationid]->vote] ?></b>
                                     </span>
-                                    <?
+                                    <?php
                                 }
                                 ?>
                                 <div class="applicationvote" style="display: none">
                                     <form action="<?=HTMLResponse::getRoute()?>?order=<?=$order?>#application<?=$application->applicationid?>" method="post">
                                         <select name="vote" onchange="$(this).parent().submit()">
                                             <option value="">(Sin voto)</option>
-                                            <?
+                                            <?php
                                             foreach($voteNames as $voteValue => $voteName) {
                                                 ?>
                                                 <option value="<?=$voteValue?>" <?=$ownVotes[$application->applicationid] && $ownVotes[$application->applicationid]->vote==$voteValue?'selected':''?>>
                                                     <?=$voteName?>
                                                 </option>
-                                                <?
+                                                <?php
                                             }
                                             ?>
                                         </select>
@@ -180,7 +180,7 @@ class JoinUs implements PublicSection
                                 </div>
                             </div>
 
-                            <?
+                            <?php
                             $score = $application->getScore();
                             $r = 0; $g = 0; $b = 0;
                             if ($score >= 1) {
@@ -238,7 +238,7 @@ class JoinUs implements PublicSection
 
                                 <div style="height: 9px"></div>
 
-                                <?
+                                <?php
                                 $votes = Model::groupBy($application->getVotes(), 'vote');
                                 foreach($voteNames as $voteValue => $voteName) {
                                     ?>
@@ -246,31 +246,31 @@ class JoinUs implements PublicSection
                                         Votaron <b><?=$voteName?></b> (<?=count($votes[$voteValue])?>):
                                     </div>
                                     <div class="inblock">
-                                        <?
+                                        <?php
                                         if ($votes[$voteValue]) {
                                             foreach ($votes[$voteValue] as $vote) {
                                                 ?>
                                                 <a target="_blank" href="https://twitter.com/<?= $vote->username ?>">
                                                     <?= $vote->username ?>,
                                                 </a>
-                                                <?
+                                                <?php
                                             }
                                         }
                                         ?>
                                     </div>
                                     <div style="height: 5px"></div>
-                                <? } ?>
+                                <?php } ?>
 
                                 <div style="height: 9px"></div>
 
                             </div>
                         </td>
                     </tr>
-                    <?
+                    <?php
                 }
                 ?>
             </table><br>
-            <?
+            <?php
         }
         else {
 
@@ -305,7 +305,7 @@ class JoinUs implements PublicSection
                     <div style="color: red; margin: 6px">
                         Error: debes rellenar todos los campos y aceptar las normas para poder mandar tu solicitud.
                     </div>
-                    <?
+                    <?php
                 }
             }
 
@@ -315,7 +315,7 @@ class JoinUs implements PublicSection
                     Ya has mandado tu solicitud (<?= date("Y/m/d H:i:s", $application->dateline) ?>).<br>
                     Contactaremos contigo si eres aceptado.
                 </div>
-                <?
+                <?php
             } else {
                 ?>
             <form action="<?= HTMLResponse::getRoute() ?>" method="post" class="inblock">
@@ -324,15 +324,15 @@ class JoinUs implements PublicSection
                     Cuenta de Twitter
                 </div>
                 <div class="inblock middle" style="width: 240px; text-align: left">
-                    <? if ($disabled) { ?>
+                    <?php if ($disabled) { ?>
                         <a href="<?= HTMLResponse::getRoute() ?>?authenticate=1">
                             Inicia sesión antes de rellenar
                         </a>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <a target="_blank" href="http://twitter.com/<?= TwitterAuth::getUserName() ?>">
                             <?= TwitterAuth::getUserName() ?>
                         </a>
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <div style="height: 4px"></div>
 
@@ -419,7 +419,7 @@ class JoinUs implements PublicSection
 
 
 
-                </form><?
+                </form><?php
             }
         }
     }

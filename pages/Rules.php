@@ -49,13 +49,13 @@ class Rules implements PublicSection
                 <a href="<?=HTMLResponse::getRoute()?>?edit=1">
                     Editar página
                 </a>
-            <? } else { ?>
+            <?php } else { ?>
                 <a href="<?=HTMLResponse::getRoute()?>" onclick="return confirm('Quieres descartar los cambios?')">
                     Descartar y volver a la página
                 </a>
-            <? } ?>
+            <?php } ?>
             <div style="height: 6px"></div>
-            <?
+            <?php
         }
 
         $content = Setting::getKey('rules_content');
@@ -63,7 +63,7 @@ class Rules implements PublicSection
         if (!$editing) {
             ?><div class="inblock" style="margin: 0 auto; max-width: 90%; text-align: justify">
                 <?=$content?>
-            </div><?
+            </div><?php
         }
         else {
 
@@ -90,7 +90,7 @@ class Rules implements PublicSection
                 <input type="hidden" name="csrf" value="<?=$csrf?>">
                 <button type="submit">Guardar cambios</button>
             </form>
-            <?
+            <?php
         }
 
     }

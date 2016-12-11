@@ -106,7 +106,7 @@ class BetsRanking implements PublicSection
                             <div class="inblock" style="vertical-align: middle">
                                 <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">
                                     <?= htmlentities($usernames[$userid]) ?>
-                                    <? if (!isset($usernames[$userid])) echo "<i>$userid</i>"; ?>
+                                    <?php if (!isset($usernames[$userid])) echo "<i>$userid</i>"; ?>
                                 </a>
                             </div>
                         </td>
@@ -124,7 +124,7 @@ class BetsRanking implements PublicSection
                         <td>Acierto</td>
                     </tr>
                     </thead>
-                    <? foreach($userBets as $bet) {
+                    <?php foreach($userBets as $bet) {
                         if (!isset($matches[$bet->matchid])) continue;
                         /**
                          * @var $match Match
@@ -144,9 +144,9 @@ class BetsRanking implements PublicSection
                                     <div class="teamimg64">
                                         <img src="/<?= $team1->getImageLink(64, 64) ?>" class="<?= $match->getWinner() == $team1->teamid ? '' : 'grayscale' ?>">
                                     </div>
-                                    <? if ($bet->teamid == $team1->teamid) { ?>
+                                    <?php if ($bet->teamid == $team1->teamid) { ?>
                                         <br><i style="font-size:11px">Votado</i>
-                                    <? } ?>
+                                    <?php } ?>
                                 </div>
 
                                 <div class="inblock" style="line-height: 64px; margin: 0px 4px">
@@ -157,9 +157,9 @@ class BetsRanking implements PublicSection
                                     <div class="teamimg64">
                                         <img src="/<?= $team2->getImageLink(64, 64) ?>" class="<?= $match->getWinner() == $team2->teamid ? '' : 'grayscale' ?>">
                                     </div>
-                                    <? if ($bet->teamid == $team2->teamid) { ?>
+                                    <?php if ($bet->teamid == $team2->teamid) { ?>
                                         <br><i style="font-size:11px">Votado</i>
-                                    <? } ?>
+                                    <?php } ?>
                                 </div>
                             </td>
                             <td>
@@ -169,11 +169,11 @@ class BetsRanking implements PublicSection
                             </td>
 
                         </tr>
-                        <?
+                        <?php
                     } ?>
                 </table>
             </div>
-            <?
+            <?php
         }
 
 
@@ -190,7 +190,7 @@ class BetsRanking implements PublicSection
                 </tr>
                 </thead>
 
-                <?
+                <?php
                 $lastTiebreakers = null;
                 $lastPos = 0;
                 foreach(array_keys($tiebreakers) as $pos => $userid) {
@@ -215,19 +215,19 @@ class BetsRanking implements PublicSection
                             <div class="inblock" style="vertical-align: middle">
                                 <a href="http://twitter.com/<?=htmlentities($usernames[$userid])?>" target="_blank">
                                     <?= htmlentities($usernames[$userid]) ?>
-                                    <? if (!isset($usernames[$userid])) echo "<i>$userid</i>"; ?>
+                                    <?php if (!isset($usernames[$userid])) echo "<i>$userid</i>"; ?>
                                 </a>
                             </div>
                         </td>
                         <td><?= $correctBets[$userid] ?></td>
                         <td><?= $totalBets[$userid]-$correctBets[$userid] ?></td>
                     </tr>
-                    <?
+                    <?php
                     $lastTiebreakers = $tiebreakers[$userid];
                 }
                 ?>
             </table>
         </div>
-        <?
+        <?php
     }
 }

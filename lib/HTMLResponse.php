@@ -79,10 +79,10 @@ class HTMLResponse {
             list($data, $isURL, $toHead) = $arr;
             if ($toHead == $isHead) {
                 if ($isURL) {
-                    ?><script src="<?=htmlentities($data)?>"></script><?
+                    ?><script src="<?=htmlentities($data)?>"></script><?php
                 }
                 else {
-                    ?><script><?=$data?></script><?
+                    ?><script><?=$data?></script><?php
                 }
             }
         }
@@ -112,11 +112,11 @@ class HTMLResponse {
         foreach($this->metas as $key => $value) {
             if ($key == 'charset') {
                 ?><meta charset="<?=htmlentities($value)?>" id="meta-charset">
-            <?
+            <?php
             }
             else {
                 ?><meta name="<?=htmlentities($key)?>" content="<?=htmlentities($value)?>" id="meta-<?=htmlentities($key)?>">
-            <?
+            <?php
             }
         }
     }
@@ -127,10 +127,10 @@ class HTMLResponse {
                 if ($isHead) {
                     if ($isURL) {
                         ?>
-                        <link href='<?= htmlentities($data) ?>' rel='stylesheet' type='text/css'><?
+                        <link href='<?= htmlentities($data) ?>' rel='stylesheet' type='text/css'><?php
                     } else {
                         ?>
-                        <style type="text/css"><?= $data ?></style><?
+                        <style type="text/css"><?= $data ?></style><?php
                     }
                 } else {
                     if ($isURL) {
@@ -144,10 +144,10 @@ class HTMLResponse {
                                 webkitRequestAnimationFrame || msRequestAnimationFrame;
                             if (raf) raf(cb);
                             else window.addEventListener('load', cb);
-                        </script><?
+                        </script><?php
                     } else {
                         ?>
-                        <style type="text/css"><?= $data ?></style><?
+                        <style type="text/css"><?= $data ?></style><?php
                     }
                 }
             }

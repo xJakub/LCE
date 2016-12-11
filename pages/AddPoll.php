@@ -41,13 +41,13 @@ class AddPoll implements PublicSection
             <a href="<?=HTMLResponse::getRoute()?>?authenticate=1">
                 Inicia sesión.
             </a><br>
-            <?
+            <?php
             return;
         }
         else if (!Team::isAdmin()) {
             ?>
             Sólo los administradores pueden ver esta página.<br>
-            <?
+            <?php
             return;
         }
         else {
@@ -101,7 +101,7 @@ class AddPoll implements PublicSection
                     <input name="description" value="<?=htmlentities($description)?>">
                 </div>
 
-                <?
+                <?php
                 for ($i=1; $i<=6; $i++) {
                     ?>
                     <div style="padding:3px">
@@ -110,7 +110,7 @@ class AddPoll implements PublicSection
                         </div>
                         <input name="option<?=$i?>" value="<?=htmlentities($options[$i-1])?>">
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
 
@@ -121,7 +121,7 @@ class AddPoll implements PublicSection
                     <input type="submit" value="Crear votación">
                 </div>
             </form>
-            <?
+            <?php
 
 
         }

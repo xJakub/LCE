@@ -54,7 +54,7 @@ class Admin_Teams implements PublicSection
                 <td>Opciones</td>
             </tr>
             </thead>
-            <?
+            <?php
 
             if ($csrf == $postCsrf) {
                 $newTeamName = HTMLResponse::fromPOST('newteamname', "");
@@ -113,7 +113,7 @@ class Admin_Teams implements PublicSection
                         Admin<br>
                     </td>
                 </tr>
-                <?
+                <?php
             }
             ?>
             <tr>
@@ -133,6 +133,6 @@ class Admin_Teams implements PublicSection
         </table>
         <input type="hidden" name="csrf" value="<?= $csrf ?>"><br>
         <button type="submit">Guardar cambios</button><br><br>
-        </form><?
+        </form><?php
     }
 }

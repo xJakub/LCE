@@ -129,6 +129,6 @@ class Admin_Team implements PublicSection
                 <button type="submit">Guardar cambios</button><br><br>
             </form>
         </div>
-        <?
+        <?php
     }
 }
