@@ -134,7 +134,7 @@ class PublicDesign extends HTMLResponse
             <div class="content">
                 <div class="banner"></div>
                 <div class="nav" style="text-align: left">
-                    <?
+                    <?php
                     foreach ($this->topMenu as $arr) {
                         list($link, $label, $re) = $arr;
                         $status = '';
@@ -142,11 +142,11 @@ class PublicDesign extends HTMLResponse
                             $status = 'selected';
                         }
 
-                        ?><a href="<?= $link ?>" class="<?= $status ?>"><?= $label ?></a><? }
+                        ?><a href="<?= $link ?>" class="<?= $status ?>"><?= $label ?></a><?php }
                     ?>
                     <div style="float: right">
                         <select name="season" id="navSeason">
-                            <?
+                            <?php
                             $seasons = Team::isSuperAdmin() ?
                                 Season::find('1=1') :
                                 Season::find('ispublic');
@@ -161,16 +161,16 @@ class PublicDesign extends HTMLResponse
                     </div>
                 </div>
                 <div style="padding: 6px">
-                    <? if (TwitterAuth::isLogged()) { ?>
+                    <?php if (TwitterAuth::isLogged()) { ?>
                         Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a>
-                        <? if (Team::isMember()) {
-                            ?>/ <a href="/votaciones/">Votaciones</a><?
+                        <?php if (Team::isMember()) {
+                            ?>/ <a href="/votaciones/">Votaciones</a><?php
                         } ?>
-                        <? if (Team::isSuperAdmin()) {
-                            ?>/ <a href="/admin/">Panel de admin</a><?
+                        <?php if (Team::isSuperAdmin()) {
+                            ?>/ <a href="/admin/">Panel de admin</a><?php
                         } ?>
                         <br>
-                        <?
+                        <?php
                         if (TwitterAuth::isBot()) {
                             $botConfig = TwitterAuth::getBotConfig();
                             ?>
@@ -178,12 +178,12 @@ class PublicDesign extends HTMLResponse
                             <b>Última autorización:</b> <?= isset($botConfig['dateline'])
                                 ? date('Y/m/d H:i:s', $botConfig['dateline'])
                                 : 'Nunca' ?>
-                            <?
+                            <?php
                         }
                         ?>
-                    <? } else { ?>
+                    <?php } else { ?>
                         No estás identificado. <a href="<?=HTMLResponse::getRoute()?>?authenticate=1">Iniciar sesión</a><br>
-                    <? } ?>
+                    <?php } ?>
                 </div>
 
                 <div class="title">
@@ -193,6 +193,6 @@ class PublicDesign extends HTMLResponse
                 <?=$this->contents?>
             </div>
         </div>
-        <?
+        <?php
     }
 }
