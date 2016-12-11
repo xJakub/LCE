@@ -65,13 +65,11 @@ class Polls implements PublicSection
                 }
                 ?></ul><?
 
-                if (TwitterAuth::getUserName() == 'xJakub') {
-                    ?>
-                    <a href="/votaciones/crear/">
-                        Haz click aquí para añadir una nueva votación.
-                    </a>
-                    <?
-                }
+                ?>
+                <a href="/votaciones/crear/">
+                    Haz click aquí para añadir una nueva votación.
+                </a>
+                <?
             }
             ?></div><br><br><?
 
