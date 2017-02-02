@@ -18,6 +18,7 @@ class Application extends Model
     public $contributions;
     public $dateline;
     public $avatar;
+    public $region;
 
     /**
      * @param null $userid
@@ -32,7 +33,11 @@ class Application extends Model
                 $userid = TwitterAuth::getUserId();
             }
         }
-        return Application::findOne('userid = ?', [$userid]);
+        return Application::findOne('userid = ? and dateline >= ?', [$userid, mktime(0, 0, 0, 1, 1, 2017)]);
+    }
+    
+    public static function getAll() {
+        return self::find("dateline >= ? order by dateline desc", [mktime(0, 0, 0, 1, 1, 2017)]);
     }
 
     public function getVotes() {

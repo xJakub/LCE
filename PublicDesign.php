@@ -85,9 +85,9 @@ class PublicDesign extends HTMLResponse
 
         $this->addToTopMenu('/normas/', 'Normas', '/normas/');
 
-        if (Team::isAdmin()) {
+        // if (Team::isAdmin()) {
             $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
-        }
+        // }
 
         /*
         if (Team::isMember()) {

@@ -77,7 +77,7 @@ class JoinUs implements PublicSection
                 </tr>
                 </thead>
                 <?php
-                $applications = Application::find("1=1 order by dateline desc");
+                $applications = Application::getAll();
 
                 if ($order == 'score') {
                     $scores = [];
@@ -135,12 +135,17 @@ class JoinUs implements PublicSection
                                 </div>
                             </div>
                             <div class="inblock middle" style="width: 150px; font-size:85%">
+
                                 <?= $application->captureboard
                                     ? '<div class="success-icon">&#x2714;</div>'
                                     : '<div class="fail-icon">&#x2718</div>' ?>
                                 <?= $application->captureboard
                                     ? 'Con capturadora'
                                     : 'Sin capturadora' ?>
+
+                                <div style="height: 3px"></div>
+
+                                <?= ['', '- Región <b>europea</b>', '- Región <b>americana</b>'][$application->region] ?>
                             </div>
 
                             <div class="inblock middle" style="width: 120px; font-size:85%">
@@ -282,6 +287,7 @@ class JoinUs implements PublicSection
             $application->frequency = HTMLResponse::fromGETorPOST('frequency', '');
             $application->reason = HTMLResponse::fromGETorPOST('reason', '');
             $application->contributions = HTMLResponse::fromGETorPOST('contributions', '');
+            $application->region = HTMLResponse::fromGETorPOST('region', '');
             $agrees = HTMLResponse::fromGETorPOST('agrees', '');
             $submit = !!HTMLResponse::fromPOST('submit', '');
 
@@ -292,6 +298,7 @@ class JoinUs implements PublicSection
                     && strlen($application->frequency)
                     && strlen($application->reason)
                     && strlen($application->contributions)
+                    && strlen($application->region)
                     && !Application::exists()) {
 
                     $application->userid = TwitterAuth::getUserId();
@@ -360,6 +367,19 @@ class JoinUs implements PublicSection
                 <div style="height: 4px"></div>
 
                 <div class="inblock middle right" style="width:240px; padding-right: 8px;">
+                    ¿A qué región perteneces?
+                </div>
+                <div class="inblock middle">
+                    <div style="width:240px; text-align: left">
+                        <input type="radio" name="region"
+                               value="1" <?= $disabled ?> <?= $application->region == '1' ? 'checked' : '' ?>> Europa
+                        <input type="radio" name="region"
+                               value="2" <?= $disabled ?> <?= $application->region == '2' ? 'checked' : '' ?>> América
+                    </div>
+                </div>
+                <div style="height: 4px"></div>
+
+                <div class="inblock middle right" style="width:240px; padding-right: 8px;">
                     ¿Con qué frecuencia subes vídeos?
                 </div>
                 <div class="inblock middle">
@@ -390,7 +410,7 @@ class JoinUs implements PublicSection
 
                 </div>
                 <div class="inblock middle" style="font-size: 80%; text-align: left; width:240px">
-                    Estás solicitando acceso a la Little Cup de la LCE. Para más información, lee las normas.
+                    Estás solicitando acceso a la próxima pretemporada de la LCE. Para más información, lee las normas.
                 </div>
 
                 <div style="height: 12px"></div>

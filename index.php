@@ -35,9 +35,9 @@ $rNumExtra = "{$rNum}{$rExtra}";
 
 
 
-if (Team::isAdmin()) {
+// if (Team::isAdmin()) {
     $router->addRoute("/unete/", array('JoinUs'));
-}
+// }
 
 $router->addRoute("/normas/", array('Rules'));
 $router->addRoute("/votaciones/", array('Polls'));

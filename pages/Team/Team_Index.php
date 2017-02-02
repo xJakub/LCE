@@ -147,8 +147,8 @@ class Team_Index implements PublicSection
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach(Match::find('(team1id = ? or team2id = ?) and seasonid = ? order by week asc',
-                    [$this->team->teamid, $this->team->teamid, $this->season->seasonid]) as $match) {
+                <?php foreach(Match::find('(team1id = ? or team2id = ?) and seasonid = ? and week <= ? order by week asc',
+                    [$this->team->teamid, $this->team->teamid, $this->season->seasonid, $this->season->getWeeksCount()]) as $match) {
 
                     if (!$this->team->isManager() && !$this->season->weekIsPublic($match->week)) {
                         continue;
@@ -190,7 +190,7 @@ class Team_Index implements PublicSection
                             </a>
                         </td>
                         <td>
-                            <i style="color: #666" <?php if ($this->team->isManager()) { ?>class="editableResult"<?php}?>>
+                            <i style="color: #666" <?php if ($this->team->isManager()) { ?>class="editableResult"<?php } ?>>
                                 <?= ($this->team->isManager() || $match->isPublished()) ? $resultNames[$match->result][$posIndex] : $resultNames[0][0] ?>
                             </i>
 
