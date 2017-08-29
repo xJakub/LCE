@@ -22,6 +22,7 @@ foreach(glob("models/*.php") as $file) {
 }
 
 require_once('PublicDesign.php');
+require_once('IndexDesign.php');
 require_once('PublicSection.php');
 
 $router = new Router();
@@ -35,9 +36,9 @@ $rNumExtra = "{$rNum}{$rExtra}";
 
 
 
-// if (Team::isAdmin()) {
+if (Team::isAdmin()) {
     $router->addRoute("/unete/", array('JoinUs'));
-// }
+}
 
 $router->addRoute("/normas/", array('Rules'));
 $router->addRoute("/votaciones/", array('Polls'));
@@ -89,7 +90,11 @@ if ($indent) {
      */
     $section = $r->newInstanceArgs($indentParams);
 
-    $response = new PublicDesign($section);
+    if (get_class($section) == 'Index') {
+        $response = new IndexDesign($section);
+    } else {
+        $response = new PublicDesign($section);
+    }
     $response->show();
 
 }

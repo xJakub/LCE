@@ -478,7 +478,7 @@ class Team_Index implements PublicSection
                 $number = $y*3 + $x + 1;
                 $player = $playersByNumber[$number];
                 $playerLink = preg_replace("'\\-[0-9]$'", "", $player->name);
-                $infoLink = "http://www.smogon.com/dex/xy/pokemon/{$playerLink}/";
+                $infoLink = "http://www.smogon.com/dex/sm/pokemon/{$playerLink}/";
                 ?>
                 <td>
                     <div style="width: 144px">
@@ -529,7 +529,7 @@ class Team_Index implements PublicSection
 
     private function showFriendlyMatches() {
         $csrf = $_SESSION['csrf'];
-        $opponents = Model::indexBy($this->season->getTeams(), 'teamid');
+        $opponents = Model::indexBy(Team::getAllMembers(), 'teamid');
 
         $postCsrf = HTMLResponse::fromPOST('friendlycsrf', '');
 
@@ -542,7 +542,7 @@ class Team_Index implements PublicSection
             if (!strlen($publishDate)) $publishDate = date('Y-m-d');
             if (!strlen($publishTime)) $publishTime = date('H').':00';
 
-            $possibleOpponents = Model::pluck($this->season->getTeams(), 'teamid');
+            $possibleOpponents = Model::pluck(Team::getAllMembers(), 'teamid');
 
             $regex = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
             $timeRegex = "'^[0-9]{2}:[0-9]{2}$'";
@@ -654,7 +654,7 @@ class Team_Index implements PublicSection
                             <select name="friendlyopponentsid">
                                 <option value="">-- Elige oponentes --</option>
                                 <?php
-                                foreach($this->season->getTeams() as $team) {
+                                foreach(Team::getAllMembers() as $team) {
                                     if ($team->teamid == $this->team->teamid) continue;
                                     ?>
                                     <option value="<?=$team->teamid?>">
@@ -673,7 +673,7 @@ class Team_Index implements PublicSection
             </table>
             <?php if ($this->team->isManager()) { ?>
                 <div style="height: 6px"></div>
-                <button type="submit">Añadir amostoso</button>
+                <button type="submit">Añadir amistoso</button>
                 <input type="hidden" name="friendlycsrf" value="<?=$csrf?>">
                 <input type="hidden" name="removeid" value="">
                 </form>

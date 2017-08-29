@@ -8,6 +8,8 @@
  */
 class Admin_Team implements PublicSection
 {
+    private $team;
+
     public function __construct($teamid) {
         $this->team = Team::get($teamid);
     }
@@ -38,7 +40,11 @@ class Admin_Team implements PublicSection
      */
     public function show()
     {
-        if (!Team::isSuperAdmin()) {
+        $isOwner = TwitterAuth::isLogged()
+            && strlen($this->team->username) >= 1
+            && strtolower($this->team->username) === strtolower(TwitterAuth::getUserName()) ;
+
+        if (!Team::isSuperAdmin() && !$isOwner) {
             HTMLResponse::exitWithRoute('/');
         }
 
@@ -61,9 +67,12 @@ class Admin_Team implements PublicSection
                 file_put_contents($this->team->getImageLink(), $con);
                 $this->team->clearImageCache();
             }
-            $this->team->ismember = !!HTMLResponse::fromPOST("ismember", 0);
-            $this->team->ispublic = !!HTMLResponse::fromPOST("ispublic", 0);
-            $this->team->isadmin = !!HTMLResponse::fromPOST("isadmin", 0);
+
+            if (Team::isSuperAdmin()) {
+                $this->team->ismember = !!HTMLResponse::fromPOST("ismember", 0);
+                $this->team->ispublic = !!HTMLResponse::fromPOST("ispublic", 0);
+                $this->team->isadmin = !!HTMLResponse::fromPOST("isadmin", 0);
+            }
             $this->team->save();
         }
 
@@ -110,6 +119,7 @@ class Admin_Team implements PublicSection
                             <input name="avatar" type="file">
                         </td>
                     </tr>
+                    <? if (Team::isSuperAdmin()) { ?>
                     <tr>
                         <td>
                             <b>Opciones</b>
@@ -124,6 +134,7 @@ class Admin_Team implements PublicSection
                             Admin<br>
                         </td>
                     </tr>
+                    <?php } ?>
                 </table>
                 <input type="hidden" name="csrf" value="<?= $csrf ?>"><br>
                 <button type="submit">Guardar cambios</button><br><br>

@@ -146,6 +146,16 @@ class Batch implements PublicSection
      */
     public function show()
     {
+
+        foreach (Team::find('1=1') as $team) {
+            $oldLink = "img/" . $team->getLink() . ".png";
+            $newLink = "img/team" . $team->teamid . ".png";
+            if (file_exists($oldLink) && !file_exists($newLink)) {
+                echo "$oldLink -> $newLink<br>";
+                copy($oldLink, $newLink);
+            }
+        }
+
         // we won't need this anymore
         /*
         $this->saveResults();

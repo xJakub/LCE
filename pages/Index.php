@@ -6,20 +6,15 @@
  * Date: 09/03/2016
  * Time: 21:06
  */
-class Index implements PublicSection
+class Index implements Section
 {
-
-    public function setDesign(PublicDesign $response)
-    {
-        // TODO: Implement setDesign() method.
-    }
 
     /**
      * @return String
      */
     public function getTitle()
     {
-        // TODO: Implement getTitle() method.
+        return 'LCE Pokémon';
     }
 
     /**
@@ -27,7 +22,7 @@ class Index implements PublicSection
      */
     public function getSubtitle()
     {
-        // TODO: Implement getSubtitle() method.
+        return 'Temporada 3';
     }
 
     /**
@@ -35,9 +30,9 @@ class Index implements PublicSection
      */
     public function show()
     {
-        $season = Season::findOne('ispublic order by isdefault desc limit 1');
-        if ($season) {
-            HTMLResponse::exitWithRoute('/'.$season->getLink().'/');
-        }
+        ?>
+        <a href="/temporada-3-liga-luna/"><img style='width: 440px' src="/img/liga-luna.png"></a>
+        <a href="/temporada-3-liga-sol/"><img style='width: 440px' src="/img/liga-sol.png"></a>
+        <?php
     }
 }

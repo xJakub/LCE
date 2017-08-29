@@ -32,6 +32,10 @@ class Team extends Model {
         return HTMLResponse::toLink($this->name);
     }
 
+    public static function getAllMembers() {
+        return Model::orderBy(Team::find('ismember'), 'name');
+    }
+
     function getHashtag() {
         return str_replace(" ", "", ucwords(str_replace("-", " ", $this->getLink())));
     }
@@ -81,14 +85,14 @@ class Team extends Model {
     }
 
     function clearImageCache() {
-        $files = glob('img/thumbnails/'.$this->getLink().'-*x*.png');
+        $files = glob("img/thumbnails/team{$this->teamid}-*x*.png");
         foreach($files as $file) {
             unlink($file);
         }
     }
 
     function getImageLink($width = null, $height = null) {
-        $originalLink = 'img/'.$this->getLink().'.png';
+        $originalLink = "img/team{$this->teamid}.png";
 
         if (!$width && !$height) {
             return $originalLink;
@@ -99,7 +103,7 @@ class Team extends Model {
             }
 
             @mkdir('img/thumbnails');
-            $link = 'img/thumbnails/'.$this->getLink()."-{$width}x{$height}.png";
+            $link = "img/thumbnails/team{$this->teamid}-{$width}x{$height}.png";
             if (!file_exists($link)) {
                 $im = imagecreatefrompng($originalLink);
                 $originalWidth = imagesx($im);

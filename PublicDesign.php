@@ -85,9 +85,9 @@ class PublicDesign extends HTMLResponse
 
         $this->addToTopMenu('/normas/', 'Normas', '/normas/');
 
-        // if (Team::isAdmin()) {
+        if (Team::isAdmin()) {
             $this->addToTopMenu('/unete/', '¡Únete!', '/unete/');
-        // }
+        }
 
         /*
         if (Team::isMember()) {
@@ -164,8 +164,10 @@ class PublicDesign extends HTMLResponse
                     <?php if (TwitterAuth::isLogged()) { ?>
                         Estás identificado como <?=htmlentities(TwitterAuth::getUserName())?>. <a href="<?=HTMLResponse::getRoute()?>?logout=1">Cerrar sesión</a>
                         <?php if (Team::isMember()) {
-                            ?>/ <a href="/votaciones/">Votaciones</a><?php
-                        } ?>
+                            $usersTeam = Team::getUsersTeam();
+                            ?>/ <a href="/votaciones/">Votaciones</a>
+                            <?php if ($usersTeam) { ?>/ <a href="/admin/equipos/<?=$usersTeam[0]->teamid?>/">Editar equipo</a><?php } ?>
+                        <?php } ?>
                         <?php if (Team::isSuperAdmin()) {
                             ?>/ <a href="/admin/">Panel de admin</a><?php
                         } ?>
